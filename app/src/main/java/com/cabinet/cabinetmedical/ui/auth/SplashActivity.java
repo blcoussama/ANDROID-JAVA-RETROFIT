@@ -91,7 +91,7 @@ public class SplashActivity extends AppCompatActivity {
             intent = new Intent(SplashActivity.this, MainActivity.class);
         } else {
             // TODO: Créer LoginActivity
-            intent = new Intent(SplashActivity.this, MainActivity.class);
+            intent = new Intent(SplashActivity.this, LoginActivity.class);
         }
 
         startActivity(intent);
