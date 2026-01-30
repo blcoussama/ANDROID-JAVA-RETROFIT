@@ -53,9 +53,10 @@ public class LoginActivity extends AppCompatActivity {
         // Click listeners
         loginButton.setOnClickListener(v -> attemptLogin());
         registerLink.setOnClickListener(v -> {
-            // TODO: Ouvrir RegisterActivity
-            Toast.makeText(this, "RegisterActivity pas encore créé", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
+
     }
 
     private void attemptLogin() {
