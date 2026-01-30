@@ -63,7 +63,7 @@ public class LoginResponse {
     /**
      * Rôle de l'utilisateur
      * Valeurs: "PATIENT", "DOCTOR", "ADMIN"
-     
+
      * UTILISATION:
      * Android redirige selon le rôle:
      * - PATIENT → Home Patient
