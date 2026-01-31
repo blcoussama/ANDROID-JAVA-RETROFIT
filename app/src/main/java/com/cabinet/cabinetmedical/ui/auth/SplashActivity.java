@@ -10,6 +10,9 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cabinet.cabinetmedical.MainActivity;
+import com.cabinet.cabinetmedical.ui.admin.DashboardAdminActivity;
+import com.cabinet.cabinetmedical.ui.doctor.HomeDoctorActivity;
+import com.cabinet.cabinetmedical.ui.patient.HomePatientActivity;
 import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
@@ -158,16 +161,44 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     /**
-     * Rediriger vers MainActivity (utilisateur authentifié)
+     * Rediriger vers l'écran approprié selon le rôle (utilisateur authentifié)
      *
-     * TODO FUTUR:
-     * - Rediriger selon rôle stocké dans SharedPreferences
-     * - PATIENT → HomePatientActivity
-     * - DOCTOR → HomeDoctorActivity
-     * - ADMIN → DashboardAdminActivity
+     * REDIRECTION:
+     * - PATIENT → HomePatientActivity (SCR-P02)
+     * - DOCTOR → HomeDoctorActivity (SCR-D01)
+     * - ADMIN → DashboardAdminActivity (SCR-A01)
+     * - Pas de rôle (fallback sécurisé) → LoginActivity
+     *
+     * SÉCURITÉ:
+     * Si le rôle n'existe pas ou est invalide, on redirige vers Login
+     * (principe de sécurité : en cas de doute, déconnecter)
      */
     private void navigateToMain() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
+        String role = prefs.getString("user_role", "");
+
+        Intent intent;
+
+        switch (role) {
+            case "PATIENT":
+                intent = new Intent(SplashActivity.this, HomePatientActivity.class);
+                break;
+
+            case "DOCTOR":
+                intent = new Intent(SplashActivity.this, HomeDoctorActivity.class);
+                break;
+
+            case "ADMIN":
+                intent = new Intent(SplashActivity.this, DashboardAdminActivity.class);
+                break;
+
+            default:
+                // Rôle invalide ou absent → Login (sécurité)
+                Log.w(TAG, "Rôle invalide ou absent : " + role + " → LoginActivity");
+                intent = new Intent(SplashActivity.this, LoginActivity.class);
+                break;
+        }
+
         startActivity(intent);
         finish(); // Fermer SplashActivity (pas de retour arrière)
     }

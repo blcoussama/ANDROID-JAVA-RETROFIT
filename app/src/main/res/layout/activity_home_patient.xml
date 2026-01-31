@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <!-- Logo ou icône patient -->
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@android:drawable/ic_menu_myplaces"
+        android:layout_marginBottom="32dp"
+        android:contentDescription="Patient icon" />
+
+    <!-- Message de bienvenue -->
+    <TextView
+        android:id="@+id/welcome_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenue Patient !"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"
+        android:gravity="center" />
+
+    <!-- Sous-titre -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Espace Patient"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="48dp" />
+
+    <!-- TODO: Ajouter boutons "Prendre RDV" et "Mes RDV" plus tard -->
+
+    <!-- Bouton déconnexion -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Se déconnecter"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/design_default_color_error"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="32dp" />
+
+</LinearLayout>

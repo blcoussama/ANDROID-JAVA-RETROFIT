@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cabinet.cabinetmedical.MainActivity;
+import com.cabinet.cabinetmedical.ui.admin.DashboardAdminActivity;
+import com.cabinet.cabinetmedical.ui.doctor.HomeDoctorActivity;
+import com.cabinet.cabinetmedical.ui.patient.HomePatientActivity;
 import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
@@ -135,12 +138,38 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Rediriger vers l'écran approprié selon le rôle de l'utilisateur
+     *
+     * REDIRECTION:
+     * - PATIENT → HomePatientActivity (SCR-P02)
+     * - DOCTOR → HomeDoctorActivity (SCR-D01)
+     * - ADMIN → DashboardAdminActivity (SCR-A01)
+     * - Autre (fallback) → MainActivity
+     *
+     * @param role Rôle de l'utilisateur (PATIENT, DOCTOR, ADMIN)
+     */
     private void navigateToHome(String role) {
         Intent intent;
 
-        // TODO: Créer HomePatientActivity, HomeDoctorActivity, DashboardAdminActivity
-        // Pour l'instant, on redirige vers MainActivity
-        intent = new Intent(LoginActivity.this, MainActivity.class);
+        switch (role) {
+            case "PATIENT":
+                intent = new Intent(LoginActivity.this, HomePatientActivity.class);
+                break;
+
+            case "DOCTOR":
+                intent = new Intent(LoginActivity.this, HomeDoctorActivity.class);
+                break;
+
+            case "ADMIN":
+                intent = new Intent(LoginActivity.this, DashboardAdminActivity.class);
+                break;
+
+            default:
+                // Fallback (ne devrait jamais arriver)
+                intent = new Intent(LoginActivity.this, MainActivity.class);
+                break;
+        }
 
         startActivity(intent);
         finish(); // Fermer LoginActivity

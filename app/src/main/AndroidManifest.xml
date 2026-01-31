@@ -44,6 +44,21 @@
             android:name=".ui.auth.RegisterActivity"
             android:exported="false" />
 
+        <!-- HomePatientActivity - Écran d'accueil PATIENT -->
+        <activity
+            android:name=".ui.patient.HomePatientActivity"
+            android:exported="false" />
+
+        <!-- HomeDoctorActivity - Écran d'accueil DOCTOR -->
+        <activity
+            android:name=".ui.doctor.HomeDoctorActivity"
+            android:exported="false" />
+
+        <!-- DashboardAdminActivity - Tableau de bord ADMIN -->
+        <activity
+            android:name=".ui.admin.DashboardAdminActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
