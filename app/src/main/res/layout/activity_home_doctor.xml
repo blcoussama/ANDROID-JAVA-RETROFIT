@@ -36,7 +36,18 @@
         android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="48dp" />
 
-    <!-- TODO: Ajouter boutons "Mes RDV" et "Gérer créneaux" plus tard -->
+    <!-- Bouton Mes rendez-vous -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_my_appointments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mes rendez-vous"
+        android:textColor="@color/white"
+        app:icon="@android:drawable/ic_menu_recent_history"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- TODO: Ajouter bouton "Gérer créneaux" plus tard -->
 
     <!-- Bouton déconnexion -->
     <com.google.android.material.button.MaterialButton

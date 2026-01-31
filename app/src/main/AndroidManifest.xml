@@ -78,6 +78,12 @@
             android:name=".ui.doctor.HomeDoctorActivity"
             android:exported="false" />
 
+        <!-- DoctorAppointmentsActivity - Liste RDV (DOCTOR) -->
+        <activity
+            android:name=".ui.doctor.DoctorAppointmentsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.doctor.HomeDoctorActivity" />
+
         <!-- DashboardAdminActivity - Tableau de bord ADMIN -->
         <activity
             android:name=".ui.admin.DashboardAdminActivity"

@@ -12,7 +12,9 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -318,6 +320,69 @@ public interface ApiService {
      */
     @GET("api/appointments/patient/{patientId}")
     Call<List<AppointmentResponse>> getPatientAppointments(@Path("patientId") Long patientId);
+
+    /**
+     * Obtenir tous les RDV d'un médecin (UC-D03)
+     *
+     * ENDPOINT: GET /api/appointments/doctor/{doctorId}
+     *
+     * RESPONSE 200 OK:
+     * [
+     *   {
+     *     "id": 1,
+     *     "patientId": 1,
+     *     "patientName": "Fatima Patient",
+     *     "patientEmail": "patient@email.com",
+     *     "patientPhone": "0612345678",
+     *     "doctorId": 1,
+     *     "doctorName": "Dr. Saad Doctor",
+     *     "doctorSpecialty": "Pédiatre",
+     *     "dateTime": "2026-02-03T14:00:00",
+     *     "reason": "Consultation",
+     *     "status": "PENDING"
+     *   }
+     * ]
+     *
+     * @param doctorId ID du médecin
+     * @return Call<List<AppointmentResponse>> Liste des RDV du médecin
+     */
+    @GET("api/appointments/doctor/{doctorId}")
+    Call<List<AppointmentResponse>> getDoctorAppointments(@Path("doctorId") Long doctorId);
+
+    /**
+     * Confirmer un rendez-vous (UC-D05)
+     *
+     * ENDPOINT: POST /api/appointments/{id}/confirm
+     *
+     * RESPONSE 200 OK:
+     * {
+     *   "id": 1,
+     *   "status": "CONFIRMED",
+     *   ...
+     * }
+     *
+     * @param appointmentId ID du RDV
+     * @return Call<AppointmentResponse> RDV confirmé
+     */
+    @POST("api/appointments/{id}/confirm")
+    Call<AppointmentResponse> confirmAppointment(@Path("id") Long appointmentId);
+
+    /**
+     * Annuler un rendez-vous (UC-D06)
+     *
+     * ENDPOINT: DELETE /api/appointments/{id}?cancelledBy={who}
+     *
+     * @param appointmentId ID du RDV
+     * @param cancelledBy Qui annule (PATIENT/DOCTOR/ADMIN)
+     * @param request Body avec raison (passer null si pas de raison)
+     * @return Call<Void>
+     */
+    @HTTP(method = "DELETE", path = "api/appointments/{id}", hasBody = true)
+    Call<Void> cancelAppointment(
+            @Path("id") Long appointmentId,
+            @Query("cancelledBy") String cancelledBy,
+            @Body Object request
+    );
 
     // ═══════════════════════════════════════════════════════
     // AUTRES ENDPOINTS (À AJOUTER PLUS TARD)
