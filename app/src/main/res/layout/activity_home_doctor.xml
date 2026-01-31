@@ -47,7 +47,16 @@
         app:cornerRadius="8dp"
         android:layout_marginTop="16dp" />
 
-    <!-- TODO: Ajouter bouton "Gérer créneaux" plus tard -->
+    <!-- Bouton Gérer mes créneaux -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_manage_timeslots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gérer mes créneaux"
+        android:textColor="@color/white"
+        app:icon="@android:drawable/ic_menu_my_calendar"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp" />
 
     <!-- Bouton déconnexion -->
     <com.google.android.material.button.MaterialButton

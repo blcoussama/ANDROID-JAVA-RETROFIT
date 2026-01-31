@@ -34,6 +34,7 @@ public class HomeDoctorActivity extends AppCompatActivity {
 
     private TextView welcomeMessage;
     private MaterialButton myAppointmentsButton;
+    private MaterialButton manageTimeSlotsButton;
     private MaterialButton logoutButton;
 
     @Override
@@ -44,6 +45,7 @@ public class HomeDoctorActivity extends AppCompatActivity {
         // Initialiser les vues
         welcomeMessage = findViewById(R.id.welcome_message);
         myAppointmentsButton = findViewById(R.id.button_my_appointments);
+        manageTimeSlotsButton = findViewById(R.id.button_manage_timeslots);
         logoutButton = findViewById(R.id.logout_button);
 
         // Charger les infos du médecin depuis SharedPreferences
@@ -52,6 +54,12 @@ public class HomeDoctorActivity extends AppCompatActivity {
         // Bouton mes rendez-vous
         myAppointmentsButton.setOnClickListener(v -> {
             Intent intent = new Intent(HomeDoctorActivity.this, DoctorAppointmentsActivity.class);
+            startActivity(intent);
+        });
+
+        // Bouton gérer créneaux
+        manageTimeSlotsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeDoctorActivity.this, DoctorTimeSlotsActivity.class);
             startActivity(intent);
         });
 

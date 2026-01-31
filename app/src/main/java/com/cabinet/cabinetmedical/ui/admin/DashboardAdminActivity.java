@@ -54,6 +54,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
     // Boutons navigation
     private MaterialButton manageDoctorsButton;
+    private MaterialButton managePatientsButton;
     private MaterialButton manageAppointmentsButton;
     private MaterialButton logoutButton;
 
@@ -85,6 +86,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
         errorMessage = findViewById(R.id.error_message);
 
         manageDoctorsButton = findViewById(R.id.button_manage_doctors);
+        managePatientsButton = findViewById(R.id.button_manage_patients);
         manageAppointmentsButton = findViewById(R.id.button_manage_appointments);
         logoutButton = findViewById(R.id.logout_button);
 
@@ -100,12 +102,29 @@ public class DashboardAdminActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        manageAppointmentsButton.setOnClickListener(v -> {
-            // TODO: Ouvrir AdminAppointmentsActivity
+        managePatientsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardAdminActivity.this, AdminPatientsListActivity.class);
+            startActivity(intent);
         });
 
-        // Bouton déconnexion
+        manageAppointmentsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardAdminActivity.this, AdminAllAppointmentsActivity.class);
+            startActivity(intent);
+        });
+
         logoutButton.setOnClickListener(v -> logout());
+    }
+
+    private void logout() {
+        // Supprimer toutes les données d'authentification
+        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
+        prefs.edit().clear().apply();
+
+        // Rediriger vers Login
+        Intent intent = new Intent(DashboardAdminActivity.this, com.cabinet.cabinetmedical.ui.auth.LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -180,16 +199,10 @@ public class DashboardAdminActivity extends AppCompatActivity {
         errorMessage.setVisibility(View.GONE);
     }
 
-    /**
-     * Déconnexion
-     */
-    private void logout() {
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        prefs.edit().clear().apply();
-
-        Intent intent = new Intent(DashboardAdminActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Rafraîchir les statistiques à chaque retour sur le dashboard
+        loadDashboard();
     }
 }

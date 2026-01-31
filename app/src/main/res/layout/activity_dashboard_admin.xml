@@ -408,6 +408,17 @@
             app:cornerRadius="8dp"
             android:layout_marginBottom="12dp" />
 
+        <!-- Bouton Gérer Patients -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_manage_patients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gérer les patients"
+            android:textColor="@color/white"
+            app:icon="@android:drawable/ic_menu_manage"
+            app:cornerRadius="8dp"
+            android:layout_marginBottom="12dp" />
+
         <!-- Bouton Gérer RDV -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_manage_appointments"

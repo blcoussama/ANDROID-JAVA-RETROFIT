@@ -84,6 +84,27 @@
             android:exported="false"
             android:parentActivityName=".ui.doctor.HomeDoctorActivity" />
 
+        <!-- DoctorTimeSlotsActivity - Gestion créneaux (DOCTOR) -->
+        <activity
+            android:name=".ui.doctor.DoctorTimeSlotsActivity"
+            android:exported="false"
+            android:label="Mes créneaux horaires"
+            android:parentActivityName=".ui.doctor.HomeDoctorActivity" />
+
+        <!-- DoctorAddTimeSlotActivity - Ajouter créneau (DOCTOR) -->
+        <activity
+            android:name=".ui.doctor.DoctorAddTimeSlotActivity"
+            android:exported="false"
+            android:label="Ajouter un créneau"
+            android:parentActivityName=".ui.doctor.DoctorTimeSlotsActivity" />
+
+        <!-- DoctorEditTimeSlotActivity - Modifier créneau (DOCTOR) -->
+        <activity
+            android:name=".ui.doctor.DoctorEditTimeSlotActivity"
+            android:exported="false"
+            android:label="Modifier le créneau"
+            android:parentActivityName=".ui.doctor.DoctorTimeSlotsActivity" />
+
         <!-- DashboardAdminActivity - Tableau de bord ADMIN -->
         <activity
             android:name=".ui.admin.DashboardAdminActivity"
@@ -112,6 +133,41 @@
             android:name=".ui.admin.AdminEditDoctorActivity"
             android:exported="false"
             android:parentActivityName=".ui.admin.AdminDoctorDetailsActivity" />
+
+        <!-- AdminPatientsListActivity - Liste patients (ADMIN) -->
+        <activity
+            android:name=".ui.admin.AdminPatientsListActivity"
+            android:exported="false"
+            android:label="Gestion des patients"
+            android:parentActivityName=".ui.admin.DashboardAdminActivity" />
+
+        <!-- AdminPatientDetailsActivity - Détails patient (ADMIN) -->
+        <activity
+            android:name=".ui.admin.AdminPatientDetailsActivity"
+            android:exported="false"
+            android:label="Détails du patient"
+            android:parentActivityName=".ui.admin.AdminPatientsListActivity" />
+
+        <!-- AdminAddPatientActivity - Ajouter patient (ADMIN) -->
+        <activity
+            android:name=".ui.admin.AdminAddPatientActivity"
+            android:exported="false"
+            android:label="Ajouter un patient"
+            android:parentActivityName=".ui.admin.AdminPatientsListActivity" />
+
+        <!-- AdminEditPatientActivity - Modifier patient (ADMIN) -->
+        <activity
+            android:name=".ui.admin.AdminEditPatientActivity"
+            android:exported="false"
+            android:label="Modifier le patient"
+            android:parentActivityName=".ui.admin.AdminPatientDetailsActivity" />
+
+        <!-- AdminAllAppointmentsActivity - Tous les RDV (ADMIN) -->
+        <activity
+            android:name=".ui.admin.AdminAllAppointmentsActivity"
+            android:exported="false"
+            android:label="Tous les rendez-vous"
+            android:parentActivityName=".ui.admin.DashboardAdminActivity" />
 
     </application>
 

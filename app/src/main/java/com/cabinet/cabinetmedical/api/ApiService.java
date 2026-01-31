@@ -1,14 +1,17 @@
 package com.cabinet.cabinetmedical.api;
 
 import com.cabinet.cabinetmedical.model.request.CreateAppointmentRequest;
+import com.cabinet.cabinetmedical.model.request.CreateTimeSlotRequest;
 import com.cabinet.cabinetmedical.model.request.CreateUserRequest;
 import com.cabinet.cabinetmedical.model.request.LoginRequest;
 import com.cabinet.cabinetmedical.model.request.RegisterRequest;
+import com.cabinet.cabinetmedical.model.request.UpdateTimeSlotRequest;
 import com.cabinet.cabinetmedical.model.request.UpdateUserRequest;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
 import com.cabinet.cabinetmedical.model.response.DashboardResponse;
 import com.cabinet.cabinetmedical.model.response.DoctorResponse;
 import com.cabinet.cabinetmedical.model.response.LoginResponse;
+import com.cabinet.cabinetmedical.model.response.TimeSlotResponse;
 import com.cabinet.cabinetmedical.model.response.UserResponse;
 
 import java.util.List;
@@ -273,6 +276,90 @@ public interface ApiService {
             @Query("date") String date
     );
 
+    /**
+     * Obtenir tous les créneaux d'un médecin (UC-D02, UC-A08)
+     *
+     * ENDPOINT: GET /api/timeslots/doctor/{doctorId}
+     *
+     * RESPONSE 200 OK:
+     * [
+     *   {
+     *     "id": 1,
+     *     "doctorId": 1,
+     *     "doctorName": "Dr. Saad Doctor",
+     *     "doctorSpecialty": "Pédiatre",
+     *     "dayOfWeek": "MONDAY",
+     *     "dayOfWeekFr": "Lundi",
+     *     "startTime": "09:00:00",
+     *     "endTime": "12:00:00",
+     *     "durationMinutes": 180
+     *   },
+     *   ...
+     * ]
+     *
+     * @param doctorId ID du médecin
+     * @return Call<List<TimeSlotResponse>> Liste des créneaux du médecin
+     */
+    @GET("api/timeslots/doctor/{doctorId}")
+    Call<List<TimeSlotResponse>> getDoctorTimeSlots(@Path("doctorId") Long doctorId);
+
+    /**
+     * Créer un créneau horaire (UC-D02, UC-A08)
+     *
+     * ENDPOINT: POST /api/timeslots
+     *
+     * REQUEST BODY:
+     * {
+     *   "doctorId": 1,
+     *   "dayOfWeek": "MONDAY",
+     *   "startTime": "09:00:00",
+     *   "endTime": "12:00:00"
+     * }
+     *
+     * RESPONSE 201 CREATED:
+     * TimeSlotResponse
+     *
+     * @param request CreateTimeSlotRequest
+     * @return Call<TimeSlotResponse> Créneau créé
+     */
+    @POST("api/timeslots")
+    Call<TimeSlotResponse> createTimeSlot(@Body CreateTimeSlotRequest request);
+
+    /**
+     * Modifier un créneau horaire (UC-D02, UC-A08)
+     *
+     * ENDPOINT: PUT /api/timeslots/{id}
+     *
+     * REQUEST BODY:
+     * {
+     *   "dayOfWeek": "TUESDAY",
+     *   "startTime": "14:00:00",
+     *   "endTime": "18:00:00"
+     * }
+     *
+     * RESPONSE 200 OK:
+     * TimeSlotResponse
+     *
+     * @param timeSlotId ID du créneau
+     * @param request UpdateTimeSlotRequest
+     * @return Call<TimeSlotResponse> Créneau modifié
+     */
+    @PUT("api/timeslots/{id}")
+    Call<TimeSlotResponse> updateTimeSlot(@Path("id") Long timeSlotId, @Body UpdateTimeSlotRequest request);
+
+    /**
+     * Supprimer un créneau horaire (UC-D02, UC-A08)
+     *
+     * ENDPOINT: DELETE /api/timeslots/{id}
+     *
+     * RESPONSE 204 NO CONTENT
+     *
+     * @param timeSlotId ID du créneau
+     * @return Call<Void>
+     */
+    @DELETE("api/timeslots/{id}")
+    Call<Void> deleteTimeSlot(@Path("id") Long timeSlotId);
+
     // ═══════════════════════════════════════════════════════
     // APPOINTMENTS (RENDEZ-VOUS)
     // ═══════════════════════════════════════════════════════
@@ -297,6 +384,31 @@ public interface ApiService {
     Call<AppointmentResponse> createAppointment(
             @Query("patientId") Long patientId,
             @Body CreateAppointmentRequest request);
+
+    /**
+     * Obtenir TOUS les rendez-vous (UC-A09 - Admin uniquement)
+     *
+     * ENDPOINT: GET /api/appointments
+     *
+     * RESPONSE 200 OK:
+     * [
+     *   {
+     *     "id": 1,
+     *     "patientId": 1,
+     *     "patientName": "Jean Dupont",
+     *     "doctorId": 1,
+     *     "doctorName": "Dr. Pierre Dupont",
+     *     "doctorSpecialty": "Pédiatre",
+     *     "dateTime": "2026-02-03T14:00:00",
+     *     "reason": "Consultation",
+     *     "status": "PENDING"
+     *   }
+     * ]
+     *
+     * @return Call<List<AppointmentResponse>> Liste de tous les RDV
+     */
+    @GET("api/appointments")
+    Call<List<AppointmentResponse>> getAllAppointments();
 
     /**
      * Obtenir tous les RDV d'un patient (UC-P03)
