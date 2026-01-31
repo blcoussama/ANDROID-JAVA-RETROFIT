@@ -1,11 +1,15 @@
 package com.cabinet.cabinetmedical.api;
 
 import com.cabinet.cabinetmedical.model.request.CreateAppointmentRequest;
+import com.cabinet.cabinetmedical.model.request.CreateUserRequest;
 import com.cabinet.cabinetmedical.model.request.LoginRequest;
 import com.cabinet.cabinetmedical.model.request.RegisterRequest;
+import com.cabinet.cabinetmedical.model.request.UpdateUserRequest;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
+import com.cabinet.cabinetmedical.model.response.DashboardResponse;
 import com.cabinet.cabinetmedical.model.response.DoctorResponse;
 import com.cabinet.cabinetmedical.model.response.LoginResponse;
+import com.cabinet.cabinetmedical.model.response.UserResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +20,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -385,11 +390,147 @@ public interface ApiService {
     );
 
     // ═══════════════════════════════════════════════════════
-    // AUTRES ENDPOINTS (À AJOUTER PLUS TARD)
+    // ADMIN ENDPOINTS
     // ═══════════════════════════════════════════════════════
 
-    // GET /api/appointments/patient/{id}
-    // etc.
+    /**
+     * Obtenir le dashboard admin avec statistiques (UC-A02)
+     *
+     * ENDPOINT: GET /api/admin/dashboard
+     *
+     * RESPONSE 200 OK:
+     * {
+     *   "totalAppointmentsToday": 2,
+     *   "totalAppointmentsWeek": 5,
+     *   "appointmentsByStatus": {
+     *     "PENDING": 2,
+     *     "CONFIRMED": 1,
+     *     "CANCELLED": 2
+     *   },
+     *   "recentAppointments": [...],
+     *   "totalDoctors": 2,
+     *   "totalPatients": 3,
+     *   "totalUsers": 6
+     * }
+     *
+     * @return Call<DashboardResponse> Statistiques du dashboard
+     */
+    @GET("api/admin/dashboard")
+    Call<DashboardResponse> getDashboard();
 
-    // On ajoutera ces endpoints au fur et à mesure
+    /**
+     * Obtenir la liste de tous les utilisateurs (UC-A03)
+     *
+     * ENDPOINT: GET /api/users
+     *
+     * RESPONSE 200 OK:
+     * [
+     *   {
+     *     "id": 1,
+     *     "email": "user@email.com",
+     *     "firstName": "Jean",
+     *     "lastName": "Dupont",
+     *     "phone": "0612345678",
+     *     "role": "DOCTOR",
+     *     "createdAt": "2026-01-31T10:00:00",
+     *     "lastLoginAt": "2026-01-31T18:00:00"
+     *   },
+     *   ...
+     * ]
+     *
+     * @return Call<List<UserResponse>> Liste de tous les utilisateurs
+     */
+    @GET("api/users")
+    Call<List<UserResponse>> getAllUsers();
+
+    /**
+     * Obtenir les détails d'un utilisateur
+     *
+     * ENDPOINT: GET /api/users/{id}
+     *
+     * @param userId ID de l'utilisateur
+     * @return Call<UserResponse> Détails de l'utilisateur
+     */
+    @GET("api/users/{id}")
+    Call<UserResponse> getUserById(@Path("id") Long userId);
+
+    /**
+     * Créer un patient (UC-A04)
+     *
+     * ENDPOINT: POST /api/users/patient
+     *
+     * REQUEST BODY:
+     * {
+     *   "email": "patient@email.com",
+     *   "password": "Password123",
+     *   "firstName": "Marie",
+     *   "lastName": "Dupont",
+     *   "phone": "0612345678",
+     *   "specialty": null
+     * }
+     *
+     * @param request CreateUserRequest (sans specialty)
+     * @return Call<UserResponse> Utilisateur créé
+     */
+    @POST("api/users/patient")
+    Call<UserResponse> createPatient(@Body CreateUserRequest request);
+
+    /**
+     * Créer un médecin (UC-A05)
+     *
+     * ENDPOINT: POST /api/users/doctor
+     *
+     * REQUEST BODY:
+     * {
+     *   "email": "doctor@email.com",
+     *   "password": "Password123",
+     *   "firstName": "Pierre",
+     *   "lastName": "Martin",
+     *   "phone": "0612345678",
+     *   "specialty": "Cardiologue"
+     * }
+     *
+     * @param request CreateUserRequest (avec specialty obligatoire)
+     * @return Call<UserResponse> Médecin créé
+     */
+    @POST("api/users/doctor")
+    Call<UserResponse> createDoctor(@Body CreateUserRequest request);
+
+    /**
+     * Modifier un utilisateur (UC-A06)
+     *
+     * ENDPOINT: PUT /api/users/{id}
+     *
+     * REQUEST BODY:
+     * {
+     *   "email": "newemail@email.com",
+     *   "password": "",  // Vide = ne pas modifier
+     *   "firstName": "Jean",
+     *   "lastName": "Dupont",
+     *   "phone": "0612345678"
+     * }
+     *
+     * NOTE: Admin ne peut pas modifier d'autres admins (sécurité)
+     *
+     * @param userId ID de l'utilisateur à modifier
+     * @param request UpdateUserRequest
+     * @return Call<UserResponse> Utilisateur modifié
+     */
+    @PUT("api/users/{id}")
+    Call<UserResponse> updateUser(@Path("id") Long userId, @Body UpdateUserRequest request);
+
+    /**
+     * Supprimer un utilisateur (UC-A07)
+     *
+     * ENDPOINT: DELETE /api/users/{id}
+     *
+     * NOTE: Admin ne peut pas supprimer d'autres admins (sécurité)
+     *
+     * @param userId ID de l'utilisateur à supprimer
+     * @return Call<Void> 204 NO CONTENT si succès
+     */
+    @DELETE("api/users/{id}")
+    Call<Void> deleteUser(@Path("id") Long userId);
+
+    // On ajoutera d'autres endpoints au fur et à mesure
 }
