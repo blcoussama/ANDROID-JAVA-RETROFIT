@@ -151,6 +151,53 @@ public interface ApiService {
     @GET("api/auth/email-exists")
     Call<Map<String, Object>> emailExists(@Query("email") String email);
 
+    /**
+     * Valider le token JWT
+     *
+     * ENDPOINT: GET /api/auth/validate
+     *
+     * SÉCURITÉ:
+     * - JwtInterceptor ajoute automatiquement le token dans le header
+     * - Backend valide le token avec JwtAuthenticationFilter
+     *
+     * RESPONSE 200 OK (token valide):
+     * {
+     *   "valid": true,
+     *   "message": "Token valide"
+     * }
+     *
+     * RESPONSE 401 UNAUTHORIZED (token expiré/invalide):
+     * ErrorResponse du backend
+     *
+     * UTILISATION:
+     * Call<Map<String, Object>> call = apiService.validateToken();
+     * call.enqueue(new Callback<Map<String, Object>>() {
+     *     @Override
+     *     public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+     *         if (response.isSuccessful()) {
+     *             // Token valide (200 OK) → MainActivity
+     *             Map<String, Object> result = response.body();
+     *             boolean valid = (boolean) result.get("valid");
+     *             if (valid) {
+     *                 // Rediriger vers MainActivity
+     *             }
+     *         } else if (response.code() == 401) {
+     *             // Token expiré/invalide (401 UNAUTHORIZED)
+     *             // Clear SharedPreferences + LoginActivity
+     *         }
+     *     }
+     *
+     *     @Override
+     *     public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+     *         // Erreur réseau → LoginActivity (sécurité)
+     *     }
+     * });
+     *
+     * @return Call<Map<String, Object>>
+     */
+    @GET("api/auth/validate")
+    Call<Map<String, Object>> validateToken();
+
     // ═══════════════════════════════════════════════════════
     // AUTRES ENDPOINTS (À AJOUTER PLUS TARD)
     // ═══════════════════════════════════════════════════════

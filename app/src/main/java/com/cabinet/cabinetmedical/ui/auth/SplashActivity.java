@@ -5,39 +5,62 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cabinet.cabinetmedical.MainActivity;
 import com.cabinet.cabinetmedical.R;
+import com.cabinet.cabinetmedical.api.ApiClient;
+import com.cabinet.cabinetmedical.api.ApiService;
+
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * SplashActivity - Écran de démarrage de l'application
  *
  * FONCTIONS:
  * 1. Afficher logo/nom pendant 2 secondes
- * 2. Vérifier si token JWT existe
- * 3. Rediriger vers:
- *    - LoginActivity si pas de token
- *    - MainActivity si token existe
+ * 2. Vérifier si token JWT existe dans SharedPreferences
+ * 3. Si token existe → Valider avec backend (GET /api/auth/validate)
+ * 4. Rediriger vers:
+ *    - MainActivity si token valide (200 OK)
+ *    - LoginActivity si pas de token OU token expiré (401)
  *
- * FLOW:
+ * FLOW COMPLET:
  * App Launch → SplashActivity (2s)
  * ├── SharedPreferences contient "jwt_token" ?
- * │   ├── OUI → MainActivity (TODO: rediriger selon rôle)
- * │   └── NON → LoginActivity
+ * │   ├── NON → LoginActivity
+ * │   └── OUI → Appeler GET /api/auth/validate
+ * │       ├── 200 OK → MainActivity (token valide)
+ * │       ├── 401 UNAUTHORIZED → Clear token + LoginActivity (token expiré)
+ * │       └── Erreur réseau → LoginActivity (sécurité)
+ *
+ * SÉCURITÉ:
+ * - Token validé avec backend (pas juste vérifier existence)
+ * - Token expiré automatiquement supprimé
+ * - En cas d'erreur réseau → LoginActivity (principe de sécurité)
  *
  * NOTES:
  * - Pas de ActionBar (thème NoActionBar)
  * - Durée splash: 2000ms (2 secondes)
  * - Handler pour délai asynchrone
+ * - JwtInterceptor ajoute automatiquement le token dans le header
  *
  * TODO FUTUR:
- * - Valider token JWT avec backend (vérifier expiration)
- * - Rediriger selon rôle (PATIENT → HomePatient, etc.)
+ * - Rediriger selon rôle (PATIENT → HomePatient, DOCTOR → HomeDoctor)
  * - Afficher animation (fade in/out)
  */
 public class SplashActivity extends AppCompatActivity {
+
+    /**
+     * Tag pour les logs (débogage)
+     */
+    private static final String TAG = "SplashActivity";
 
     /**
      * Durée d'affichage du splash screen en millisecondes
@@ -64,37 +87,115 @@ public class SplashActivity extends AppCompatActivity {
      * LOGIQUE:
      * 1. Récupérer SharedPreferences "auth"
      * 2. Vérifier si "jwt_token" existe
-     * 3. Si OUI → MainActivity (utilisateur déjà connecté)
-     * 4. Si NON → LoginActivity (utilisateur doit se connecter)
-     *
-     * AMÉLIORATION FUTURE:
-     * - Valider token avec backend (GET /api/auth/validate)
-     * - Vérifier expiration token (parser JWT localement)
-     * - Rediriger selon rôle stocké
+     * 3. Si NON → LoginActivity (pas de token)
+     * 4. Si OUI → Valider token avec backend
+     *    - 200 OK → MainActivity (token valide)
+     *    - 401 UNAUTHORIZED → Clear + LoginActivity (token expiré)
+     *    - Erreur réseau → LoginActivity (sécurité)
      */
     private void checkAuthAndNavigate() {
-        // Récupérer SharedPreferences
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
         String token = prefs.getString("jwt_token", null);
 
-        Intent intent;
-
-        if (token != null && !token.isEmpty()) {
-            // Token existe → Utilisateur déjà connecté
-            // TODO: Rediriger selon rôle
-            // String role = prefs.getString("user_role", "");
-            // if (role.equals("PATIENT")) → HomePatientActivity
-            // if (role.equals("DOCTOR")) → HomeDoctorActivity
-            // if (role.equals("ADMIN")) → DashboardAdminActivity
-
-            // Pour l'instant, on redirige vers MainActivity
-            intent = new Intent(SplashActivity.this, MainActivity.class);
-        } else {
-            // TODO: Créer LoginActivity
-            intent = new Intent(SplashActivity.this, LoginActivity.class);
+        if (token == null || token.isEmpty()) {
+            // Pas de token → Redirection Login
+            Log.d(TAG, "Pas de token JWT trouvé → LoginActivity");
+            navigateToLogin();
+            return;
         }
 
+        // Token existe → Valider avec backend
+        Log.d(TAG, "Token JWT trouvé → Validation avec backend...");
+        validateTokenWithBackend(prefs);
+    }
+
+    /**
+     * Valider le token JWT avec le backend
+     *
+     * ENDPOINT: GET /api/auth/validate
+     *
+     * FLOW:
+     * 1. JwtInterceptor ajoute automatiquement le token dans le header
+     * 2. Backend valide le token (signature + expiration)
+     * 3. Réponses possibles:
+     *    - 200 OK → Token valide → MainActivity
+     *    - 401 UNAUTHORIZED → Token expiré/invalide → Clear + Login
+     *    - Erreur réseau → LoginActivity (sécurité)
+     *
+     * @param prefs SharedPreferences pour clear si token expiré
+     */
+    private void validateTokenWithBackend(SharedPreferences prefs) {
+        ApiService apiService = ApiClient.getClient(this).create(ApiService.class);
+        Call<Map<String, Object>> call = apiService.validateToken();
+
+        call.enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                if (response.isSuccessful()) {
+                    // ✅ Token valide (200 OK) → MainActivity
+                    Log.d(TAG, "Token valide (200 OK) → MainActivity");
+                    navigateToMain();
+
+                } else if (response.code() == 401) {
+                    // ❌ Token expiré/invalide (401 UNAUTHORIZED)
+                    Log.d(TAG, "Token expiré ou invalide (401) → Clear + LoginActivity");
+                    clearAuthAndNavigateToLogin(prefs);
+
+                } else {
+                    // ❌ Autre erreur (500, etc.) → LoginActivity par sécurité
+                    Log.e(TAG, "Erreur serveur (" + response.code() + ") → LoginActivity");
+                    navigateToLogin();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                // ❌ Erreur réseau (backend offline, timeout, etc.)
+                Log.e(TAG, "Erreur réseau → LoginActivity", t);
+                navigateToLogin();
+            }
+        });
+    }
+
+    /**
+     * Rediriger vers MainActivity (utilisateur authentifié)
+     *
+     * TODO FUTUR:
+     * - Rediriger selon rôle stocké dans SharedPreferences
+     * - PATIENT → HomePatientActivity
+     * - DOCTOR → HomeDoctorActivity
+     * - ADMIN → DashboardAdminActivity
+     */
+    private void navigateToMain() {
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         finish(); // Fermer SplashActivity (pas de retour arrière)
+    }
+
+    /**
+     * Rediriger vers LoginActivity (utilisateur non authentifié)
+     */
+    private void navigateToLogin() {
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish(); // Fermer SplashActivity (pas de retour arrière)
+    }
+
+    /**
+     * Supprimer le token expiré et rediriger vers Login
+     *
+     * UTILISATION:
+     * - Token expiré détecté par le backend (401)
+     * - Nettoie SharedPreferences pour forcer nouvelle connexion
+     *
+     * @param prefs SharedPreferences à nettoyer
+     */
+    private void clearAuthAndNavigateToLogin(SharedPreferences prefs) {
+        // Supprimer toutes les données d'authentification
+        prefs.edit().clear().apply();
+        Log.d(TAG, "SharedPreferences 'auth' nettoyées");
+
+        // Rediriger vers Login
+        navigateToLogin();
     }
 }

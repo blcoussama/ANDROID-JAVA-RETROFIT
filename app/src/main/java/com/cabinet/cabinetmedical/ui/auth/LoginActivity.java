@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +15,7 @@ import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.LoginRequest;
 import com.cabinet.cabinetmedical.model.response.LoginResponse;
+import com.cabinet.cabinetmedical.utils.ErrorParser;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -99,14 +99,17 @@ public class LoginActivity extends AppCompatActivity {
                     // Rediriger selon rôle
                     navigateToHome(loginResponse.getRole());
                 } else {
-                    showError("Email ou mot de passe incorrect");
+                    String errorMessage = ErrorParser.parseErrorMessage(response.errorBody());
+                    showError(errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 setLoading(false);
-                showError("Erreur de connexion: " + t.getMessage());
+                // ✅ Utilise ErrorParser pour message user-friendly
+                String errorMessage = ErrorParser.getNetworkErrorMessage(t);
+                showError(errorMessage);
             }
         });
     }
