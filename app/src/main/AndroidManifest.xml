@@ -49,6 +49,30 @@
             android:name=".ui.patient.HomePatientActivity"
             android:exported="false" />
 
+        <!-- DoctorListActivity - Liste des médecins (PATIENT) -->
+        <activity
+            android:name=".ui.patient.DoctorListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.patient.HomePatientActivity" />
+
+        <!-- AvailableTimeSlotsActivity - Créneaux disponibles (PATIENT) -->
+        <activity
+            android:name=".ui.patient.AvailableTimeSlotsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.patient.DoctorListActivity" />
+
+        <!-- BookAppointmentActivity - Prendre RDV (PATIENT) -->
+        <activity
+            android:name=".ui.patient.BookAppointmentActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.patient.AvailableTimeSlotsActivity" />
+
+        <!-- MyAppointmentsActivity - Historique RDV (PATIENT) -->
+        <activity
+            android:name=".ui.patient.MyAppointmentsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.patient.HomePatientActivity" />
+
         <!-- HomeDoctorActivity - Écran d'accueil DOCTOR -->
         <activity
             android:name=".ui.doctor.HomeDoctorActivity"

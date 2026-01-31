@@ -32,6 +32,8 @@ import com.google.android.material.button.MaterialButton;
 public class HomePatientActivity extends AppCompatActivity {
 
     private TextView welcomeMessage;
+    private MaterialButton seeDoctorsButton;
+    private MaterialButton myAppointmentsButton;
     private MaterialButton logoutButton;
 
     @Override
@@ -41,10 +43,24 @@ public class HomePatientActivity extends AppCompatActivity {
 
         // Initialiser les vues
         welcomeMessage = findViewById(R.id.welcome_message);
+        seeDoctorsButton = findViewById(R.id.button_see_doctors);
+        myAppointmentsButton = findViewById(R.id.button_my_appointments);
         logoutButton = findViewById(R.id.logout_button);
 
         // Charger les infos du patient depuis SharedPreferences
         loadPatientInfo();
+
+        // Bouton voir les médecins
+        seeDoctorsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePatientActivity.this, DoctorListActivity.class);
+            startActivity(intent);
+        });
+
+        // Bouton mes rendez-vous
+        myAppointmentsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePatientActivity.this, MyAppointmentsActivity.class);
+            startActivity(intent);
+        });
 
         // Bouton déconnexion
         logoutButton.setOnClickListener(v -> logout());

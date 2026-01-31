@@ -1,15 +1,20 @@
 package com.cabinet.cabinetmedical.api;
 
+import com.cabinet.cabinetmedical.model.request.CreateAppointmentRequest;
 import com.cabinet.cabinetmedical.model.request.LoginRequest;
 import com.cabinet.cabinetmedical.model.request.RegisterRequest;
+import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
+import com.cabinet.cabinetmedical.model.response.DoctorResponse;
 import com.cabinet.cabinetmedical.model.response.LoginResponse;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -199,14 +204,127 @@ public interface ApiService {
     Call<Map<String, Object>> validateToken();
 
     // ═══════════════════════════════════════════════════════
+    // DOCTORS (MÉDECINS)
+    // ═══════════════════════════════════════════════════════
+
+    /**
+     * Récupérer la liste de tous les médecins
+     *
+     * ENDPOINT: GET /api/doctors
+     *
+     * RESPONSE 200 OK:
+     * [
+     *   {
+     *     "id": 1,
+     *     "userId": 2,
+     *     "email": "doctor@email.com",
+     *     "firstName": "Saad",
+     *     "lastName": "Doctor",
+     *     "phone": "0612345678",
+     *     "specialty": "Pédiatre",
+     *     "createdAt": "2026-01-31T16:17:04.422835"
+     *   },
+     *   ...
+     * ]
+     *
+     * UTILISATION:
+     * Call<List<DoctorResponse>> call = apiService.getAllDoctors();
+     * call.enqueue(new Callback<List<DoctorResponse>>() {
+     *     @Override
+     *     public void onResponse(Call<List<DoctorResponse>> call, Response<List<DoctorResponse>> response) {
+     *         if (response.isSuccessful()) {
+     *             List<DoctorResponse> doctors = response.body();
+     *             // Afficher dans RecyclerView
+     *         }
+     *     }
+     * });
+     *
+     * @return Call<List<DoctorResponse>>
+     */
+    @GET("api/doctors")
+    Call<List<DoctorResponse>> getAllDoctors();
+
+    // ═══════════════════════════════════════════════════════
+    // TIMESLOTS (CRÉNEAUX HORAIRES)
+    // ═══════════════════════════════════════════════════════
+
+    /**
+     * Récupérer les heures disponibles pour un médecin à une date donnée
+     *
+     * ENDPOINT: GET /api/timeslots/available?doctorId={id}&date={date}
+     *
+     * RESPONSE 200 OK:
+     * ["09:00:00", "09:30:00", "10:00:00", "10:30:00", ...]
+     *
+     * @param doctorId ID du médecin
+     * @param date Date au format "YYYY-MM-DD"
+     * @return Call<List<String>> Liste des heures disponibles
+     */
+    @GET("api/timeslots/available")
+    Call<List<String>> getAvailableTimeSlots(
+            @Query("doctorId") Long doctorId,
+            @Query("date") String date
+    );
+
+    // ═══════════════════════════════════════════════════════
+    // APPOINTMENTS (RENDEZ-VOUS)
+    // ═══════════════════════════════════════════════════════
+
+    /**
+     * Créer un rendez-vous
+     *
+     * ENDPOINT: POST /api/appointments?patientId={id}
+     *
+     * REQUEST BODY:
+     * {
+     *   "doctorId": 1,
+     *   "dateTime": "2026-02-03T09:00:00",
+     *   "reason": "Consultation générale"
+     * }
+     *
+     * @param patientId ID du patient qui prend RDV
+     * @param request CreateAppointmentRequest
+     * @return Call<AppointmentResponse> Réponse du backend
+     */
+    @POST("api/appointments")
+    Call<AppointmentResponse> createAppointment(
+            @Query("patientId") Long patientId,
+            @Body CreateAppointmentRequest request);
+
+    /**
+     * Obtenir tous les RDV d'un patient (UC-P03)
+     *
+     * ENDPOINT: GET /api/appointments/patient/{patientId}
+     *
+     * RESPONSE 200 OK:
+     * [
+     *   {
+     *     "id": 1,
+     *     "patientId": 1,
+     *     "patientName": "Jean Dupont",
+     *     "doctorId": 1,
+     *     "doctorName": "Dr. Pierre Dupont",
+     *     "doctorSpecialty": "Pédiatre",
+     *     "dateTime": "2026-02-03T14:00:00",
+     *     "reason": "Consultation",
+     *     "status": "PENDING",
+     *     "cancelledBy": null,
+     *     "cancellationReason": null
+     *   }
+     * ]
+     *
+     * @param patientId ID du patient
+     * @return Call<List<AppointmentResponse>> Liste des RDV du patient
+     */
+    @GET("api/appointments/patient/{patientId}")
+    Call<List<AppointmentResponse>> getPatientAppointments(@Path("patientId") Long patientId);
+
+    // ═══════════════════════════════════════════════════════
     // AUTRES ENDPOINTS (À AJOUTER PLUS TARD)
     // ═══════════════════════════════════════════════════════
 
-    // GET /api/doctors
     // GET /api/appointments/patient/{id}
-    // POST /api/appointments
     // etc.
 
     // On ajoutera ces endpoints au fur et à mesure
-    // Pour l'instant, on se concentre sur l'authentification
 }

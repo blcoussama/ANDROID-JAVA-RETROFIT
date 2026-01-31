@@ -36,7 +36,27 @@
         android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="48dp" />
 
-    <!-- TODO: Ajouter boutons "Prendre RDV" et "Mes RDV" plus tard -->
+    <!-- Bouton Voir les médecins -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_see_doctors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Voir les médecins"
+        android:textColor="@color/white"
+        app:icon="@android:drawable/ic_menu_search"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Bouton Mes RDV -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_my_appointments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mes rendez-vous"
+        android:textColor="@color/white"
+        app:icon="@android:drawable/ic_menu_recent_history"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp" />
 
     <!-- Bouton déconnexion -->
     <com.google.android.material.button.MaterialButton
