@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -15,6 +16,7 @@ import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
 import com.cabinet.cabinetmedical.ui.doctor.DoctorAppointmentAdapter;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,11 +52,17 @@ public class AdminAllAppointmentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_all_appointments);
 
-        // Titre
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Tous les rendez-vous");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers Dashboard
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, DashboardAdminActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Initialiser Retrofit
         apiService = ApiClient.getClient(this).create(ApiService.class);

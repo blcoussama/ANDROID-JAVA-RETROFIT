@@ -15,6 +15,7 @@ import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.UserResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -53,11 +54,17 @@ public class AdminPatientsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_patients_list);
 
-        // Titre de l'écran
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Gestion des patients");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers Dashboard
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, DashboardAdminActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Initialiser Retrofit
         apiService = ApiClient.getClient(this).create(ApiService.class);

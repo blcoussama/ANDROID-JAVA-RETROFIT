@@ -15,6 +15,7 @@ import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.UserResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.ParseException;
@@ -59,11 +60,17 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_doctor_details);
 
-        // Titre
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Détails du médecin");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers AdminDoctorsListActivity
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminDoctorsListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Initialiser Retrofit
         apiService = ApiClient.getClient(this).create(ApiService.class);
@@ -266,11 +273,6 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
         errorMessage.setVisibility(View.GONE);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
-    }
 
     @Override
     protected void onResume() {
