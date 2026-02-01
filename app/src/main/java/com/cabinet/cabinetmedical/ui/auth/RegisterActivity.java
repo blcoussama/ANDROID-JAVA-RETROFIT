@@ -121,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // Sauvegarder token et infos user
                     saveUserData(loginResponse);
 
-                    // Rediriger vers home
+                    // Rediriger vers HomePatientActivity
                     navigateToHome();
                 } else {
                     String errorMessage = ErrorParser.parseErrorMessage(response.errorBody());
@@ -150,6 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
         editor.putString("user_lastName", response.getLastName());
         editor.putString("user_role", response.getRole());
 
+        // Register crée toujours un PATIENT, donc patientId est toujours présent
         if (response.getPatientId() != null) {
             editor.putLong("patient_id", response.getPatientId());
         }
@@ -157,11 +158,16 @@ public class RegisterActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Rediriger vers HomePatientActivity
+     *
+     * NOTE: L'endpoint /register crée UNIQUEMENT des comptes PATIENT
+     * Les comptes DOCTOR et ADMIN sont créés par l'administrateur
+     */
     private void navigateToHome() {
-        // TODO: Créer HomePatientActivity
-        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, com.cabinet.cabinetmedical.ui.patient.HomePatientActivity.class);
         startActivity(intent);
-        finish();
+        finish(); // Fermer RegisterActivity
     }
 
     private void setLoading(boolean loading) {

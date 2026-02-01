@@ -166,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
 
             default:
                 // Fallback (ne devrait jamais arriver)
+                // MainActivity affiche un écran d'erreur "Rôle inconnu"
                 intent = new Intent(LoginActivity.this, MainActivity.class);
                 break;
         }

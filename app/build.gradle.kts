@@ -16,8 +16,23 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true  // Active la génération de BuildConfig
+    }
+
     buildTypes {
+        debug {
+            // Environnement de DÉVELOPPEMENT (local)
+            // URL WSL2: Obtenir avec "ip addr show eth0 | grep inet"
+            buildConfigField("String", "BASE_URL", "\"http://172.25.135.62:8080/\"")
+            buildConfigField("String", "ENVIRONMENT", "\"DEV\"")
+        }
+
         release {
+            // Environnement de PRODUCTION (Railway)
+            buildConfigField("String", "BASE_URL", "\"https://android-mobile-java-springboot-app-backend-production.up.railway.app/\"")
+            buildConfigField("String", "ENVIRONMENT", "\"PROD\"")
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

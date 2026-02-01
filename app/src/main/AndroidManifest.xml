@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <!-- MainActivity temporaire -->
+        <!-- MainActivity - Écran d'erreur fallback pour rôle inconnu -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
