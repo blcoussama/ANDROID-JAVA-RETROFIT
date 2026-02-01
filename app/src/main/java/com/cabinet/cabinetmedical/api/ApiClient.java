@@ -2,7 +2,6 @@ package com.cabinet.cabinetmedical.api;
 
 import android.content.Context;
 
-import com.cabinet.cabinetmedical.BuildConfig;
 import com.cabinet.cabinetmedical.utils.JwtInterceptor;
 
 import okhttp3.OkHttpClient;
@@ -25,12 +24,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     /**
-     * URL de base configurée automatiquement via BuildConfig
-     * - DEBUG: Backend local WSL2
-     * - RELEASE: Backend Railway production
-     * Modifier dans build.gradle.kts si nécessaire
+     * URL de base de l'API backend
+     *
+     * DÉVELOPPEMENT LOCAL: Décommenter la ligne ci-dessous
+     * private static final String BASE_URL = "http://172.25.135.62:8080/";
+     *
+     * PRODUCTION RAILWAY: Décommenter la ligne ci-dessous (ACTIVE)
      */
-    private static final String BASE_URL = BuildConfig.BASE_URL;
+    private static final String BASE_URL = "https://android-mobile-java-springboot-app-backend-production.up.railway.app/";
 
     private static Retrofit retrofit = null;
 
@@ -45,8 +46,7 @@ public class ApiClient {
             return retrofit;
         }
 
-        // Log environnement
-        android.util.Log.i("ApiClient", "🌐 Environnement: " + BuildConfig.ENVIRONMENT);
+        // Log URL utilisée
         android.util.Log.i("ApiClient", "🔗 BASE_URL: " + BASE_URL);
 
         // Logging interceptor (debug)
