@@ -28,16 +28,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DoctorEditTimeSlotActivity - Modifier un créneau horaire existant
+ * DoctorEditTimeSlotActivity - Modification d'un créneau horaire
  *
- * FONCTIONNALITÉS:
- * - Formulaire pré-rempli avec données existantes
- * - Modification: Jour, Heure début, Heure fin
- * - Validation locale: endTime > startTime
- * - Bouton Supprimer (avec confirmation)
- * - Appel API: PUT /api/timeslots/{id}
+ * RÔLE:
+ * Formulaire pré-rempli pour modifier ou supprimer un créneau existant.
+ * Accessible depuis DoctorTimeSlotsActivity (clic sur un créneau).
  *
- * USE CASE: UC-D02 (Modifier/Supprimer créneau)
+ * API: PUT /api/timeslots/{id} (modifier), DELETE /api/timeslots/{id} (supprimer)
+ * ACTIONS: Bouton Enregistrer (modifier), Bouton Supprimer (avec confirmation)
  */
 public class DoctorEditTimeSlotActivity extends AppCompatActivity {
 

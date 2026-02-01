@@ -24,16 +24,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminEditDoctorActivity - Modifier un médecin existant (ADMIN)
+ * AdminEditDoctorActivity - Modification d'un médecin existant
  *
- * FONCTIONNALITÉS:
- * - Formulaire pré-rempli avec données existantes
- * - Password optionnel (vide = ne pas modifier)
- * - Validation locale
- * - Appel API: PUT /api/users/{id}
- * - Retour à détails avec message succès
+ * RÔLE:
+ * Formulaire pré-rempli pour modifier les données d'un médecin.
+ * Accessible depuis AdminDoctorDetailsActivity (bouton Modifier).
  *
- * USE CASE: UC-A06
+ * API: PUT /api/users/{id}
+ * NOTE: Password optionnel (vide = pas de changement)
  */
 public class AdminEditDoctorActivity extends AppCompatActivity {
 

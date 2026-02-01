@@ -60,7 +60,7 @@ public interface ApiService {
     // ═══════════════════════════════════════════════════════
 
     /**
-     * Inscription d'un nouveau patient (UC-P01)
+     * Inscription d'un nouveau patient (Inscription patient)
 
      * ENDPOINT: POST /api/auth/register
 
@@ -97,7 +97,7 @@ public interface ApiService {
     Call<LoginResponse> register(@Body RegisterRequest request);
 
     /**
-     * Connexion utilisateur (UC-P02, UC-D01, UC-A01)
+     * Connexion utilisateur (Connexion tous rôles)
 
      * ENDPOINT: POST /api/auth/login
 
@@ -277,7 +277,7 @@ public interface ApiService {
     );
 
     /**
-     * Obtenir tous les créneaux d'un médecin (UC-D02, UC-A08)
+     * Obtenir tous les créneaux d'un médecin (Gestion créneaux)
      *
      * ENDPOINT: GET /api/timeslots/doctor/{doctorId}
      *
@@ -304,7 +304,7 @@ public interface ApiService {
     Call<List<TimeSlotResponse>> getDoctorTimeSlots(@Path("doctorId") Long doctorId);
 
     /**
-     * Créer un créneau horaire (UC-D02, UC-A08)
+     * Créer un créneau horaire (Gestion créneaux)
      *
      * ENDPOINT: POST /api/timeslots
      *
@@ -326,7 +326,7 @@ public interface ApiService {
     Call<TimeSlotResponse> createTimeSlot(@Body CreateTimeSlotRequest request);
 
     /**
-     * Modifier un créneau horaire (UC-D02, UC-A08)
+     * Modifier un créneau horaire (Gestion créneaux)
      *
      * ENDPOINT: PUT /api/timeslots/{id}
      *
@@ -348,7 +348,7 @@ public interface ApiService {
     Call<TimeSlotResponse> updateTimeSlot(@Path("id") Long timeSlotId, @Body UpdateTimeSlotRequest request);
 
     /**
-     * Supprimer un créneau horaire (UC-D02, UC-A08)
+     * Supprimer un créneau horaire (Gestion créneaux)
      *
      * ENDPOINT: DELETE /api/timeslots/{id}
      *
@@ -386,7 +386,7 @@ public interface ApiService {
             @Body CreateAppointmentRequest request);
 
     /**
-     * Obtenir TOUS les rendez-vous (UC-A09 - Admin uniquement)
+     * Obtenir TOUS les rendez-vous (Admin uniquement)
      *
      * ENDPOINT: GET /api/appointments
      *
@@ -411,7 +411,7 @@ public interface ApiService {
     Call<List<AppointmentResponse>> getAllAppointments();
 
     /**
-     * Obtenir tous les RDV d'un patient (UC-P03)
+     * Obtenir tous les RDV d'un patient (Historique patient)
      *
      * ENDPOINT: GET /api/appointments/patient/{patientId}
      *
@@ -439,7 +439,7 @@ public interface ApiService {
     Call<List<AppointmentResponse>> getPatientAppointments(@Path("patientId") Long patientId);
 
     /**
-     * Obtenir tous les RDV d'un médecin (UC-D03)
+     * Obtenir tous les RDV d'un médecin (Historique médecin)
      *
      * ENDPOINT: GET /api/appointments/doctor/{doctorId}
      *
@@ -467,7 +467,7 @@ public interface ApiService {
     Call<List<AppointmentResponse>> getDoctorAppointments(@Path("doctorId") Long doctorId);
 
     /**
-     * Confirmer un rendez-vous (UC-D05)
+     * Confirmer un rendez-vous (Confirmer RDV)
      *
      * ENDPOINT: POST /api/appointments/{id}/confirm
      *
@@ -485,7 +485,7 @@ public interface ApiService {
     Call<AppointmentResponse> confirmAppointment(@Path("id") Long appointmentId);
 
     /**
-     * Annuler un rendez-vous (UC-D06)
+     * Annuler un rendez-vous (Annuler RDV)
      *
      * ENDPOINT: DELETE /api/appointments/{id}?cancelledBy={who}
      *
@@ -506,7 +506,7 @@ public interface ApiService {
     // ═══════════════════════════════════════════════════════
 
     /**
-     * Obtenir le dashboard admin avec statistiques (UC-A02)
+     * Obtenir le dashboard admin avec statistiques (Dashboard admin)
      *
      * ENDPOINT: GET /api/admin/dashboard
      *
@@ -531,7 +531,7 @@ public interface ApiService {
     Call<DashboardResponse> getDashboard();
 
     /**
-     * Obtenir la liste de tous les utilisateurs (UC-A03)
+     * Obtenir la liste de tous les utilisateurs (Liste utilisateurs)
      *
      * ENDPOINT: GET /api/users
      *
@@ -567,7 +567,7 @@ public interface ApiService {
     Call<UserResponse> getUserById(@Path("id") Long userId);
 
     /**
-     * Créer un patient (UC-A04)
+     * Créer un patient (Créer patient)
      *
      * ENDPOINT: POST /api/users/patient
      *
@@ -588,7 +588,7 @@ public interface ApiService {
     Call<UserResponse> createPatient(@Body CreateUserRequest request);
 
     /**
-     * Créer un médecin (UC-A05)
+     * Créer un médecin (Créer médecin)
      *
      * ENDPOINT: POST /api/users/doctor
      *
@@ -609,7 +609,7 @@ public interface ApiService {
     Call<UserResponse> createDoctor(@Body CreateUserRequest request);
 
     /**
-     * Modifier un utilisateur (UC-A06)
+     * Modifier un utilisateur (Modifier utilisateur)
      *
      * ENDPOINT: PUT /api/users/{id}
      *
@@ -632,7 +632,7 @@ public interface ApiService {
     Call<UserResponse> updateUser(@Path("id") Long userId, @Body UpdateUserRequest request);
 
     /**
-     * Supprimer un utilisateur (UC-A07)
+     * Supprimer un utilisateur (Supprimer utilisateur)
      *
      * ENDPOINT: DELETE /api/users/{id}
      *

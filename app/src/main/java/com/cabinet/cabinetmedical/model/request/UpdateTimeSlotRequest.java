@@ -3,32 +3,14 @@ package com.cabinet.cabinetmedical.model.request;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * UpdateTimeSlotRequest - DTO pour modifier un créneau horaire
+ * UpdateTimeSlotRequest - Modification d'un créneau horaire par le médecin
  *
- * UTILISATION:
- * - UC-D02: Doctor modifier ses créneaux
- * - UC-A08: Admin modifier créneaux de n'importe quel médecin
+ * RÔLE:
+ * Envoie les nouvelles données pour modifier un créneau existant (jour, heures).
+ * Utilisé par DoctorEditTimeSlotActivity.
  *
- * ENDPOINT:
- * PUT /api/timeslots/{id}
- *
- * EXEMPLE JSON:
- * {
- *   "dayOfWeek": "TUESDAY",
- *   "startTime": "14:00:00",
- *   "endTime": "18:00:00"
- * }
- *
- * VALIDATION:
- * - dayOfWeek obligatoire (MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
- * - startTime obligatoire (format HH:mm:ss)
- * - endTime obligatoire (format HH:mm:ss)
- * - startTime < endTime
- * - Pas de chevauchement avec autres créneaux (vérifié par backend)
- *
- * NOTE:
- * - doctorId ne peut pas être modifié (un créneau appartient toujours au même médecin)
- * - Tous les champs sont obligatoires (pas de modification partielle)
+ * ENDPOINT: PUT /api/timeslots/{id}
+ * NOTE: Tous les champs sont obligatoires (pas de modification partielle)
  */
 public class UpdateTimeSlotRequest {
 

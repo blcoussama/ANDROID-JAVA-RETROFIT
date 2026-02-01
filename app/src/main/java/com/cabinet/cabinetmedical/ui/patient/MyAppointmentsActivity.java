@@ -27,15 +27,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * MyAppointmentsActivity - Historique des rendez-vous du patient
+ * MyAppointmentsActivity - Liste de tous les rendez-vous du patient
  *
- * FONCTIONNALITÉS:
- * - Afficher tous les RDV du patient (passés, futurs, annulés)
- * - RecyclerView avec AppointmentAdapter
- * - Appel API: GET /api/appointments/patient/{patientId}
+ * RÔLE:
+ * Affiche l'historique complet des RDV du patient (futurs, passés, annulés).
+ * Accessible depuis HomePatientActivity (bouton "Mes rendez-vous").
  *
- * USE CASE: UC-P03
- * ÉCRAN: SCR-P06
+ * API: GET /api/appointments/patient/{patientId}
+ * AFFICHAGE: RecyclerView avec AppointmentAdapter
  */
 public class MyAppointmentsActivity extends AppCompatActivity {
 

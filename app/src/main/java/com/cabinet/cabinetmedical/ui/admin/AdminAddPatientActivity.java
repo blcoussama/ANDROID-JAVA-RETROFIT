@@ -24,15 +24,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminAddPatientActivity - Ajouter un nouveau patient (ADMIN)
+ * AdminAddPatientActivity - Création d'un nouveau patient par l'admin
  *
- * FONCTIONNALITÉS:
- * - Formulaire: email, password, firstName, lastName, phone
- * - Validation locale
- * - Appel API: POST /api/users/patient
- * - Retour à la liste avec message succès
+ * RÔLE:
+ * Formulaire pour ajouter un patient (email, password, nom, prénom, téléphone).
+ * Accessible depuis AdminPatientsListActivity (bouton FAB).
  *
- * USE CASE: UC-A04
+ * API: POST /api/users/patient
+ * VALIDATION: Email unique, password 6+ caractères
  */
 public class AdminAddPatientActivity extends AppCompatActivity {
 

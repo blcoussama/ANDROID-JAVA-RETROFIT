@@ -24,15 +24,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminAddDoctorActivity - Ajouter un nouveau médecin (ADMIN)
+ * AdminAddDoctorActivity - Création d'un nouveau médecin par l'admin
  *
- * FONCTIONNALITÉS:
- * - Formulaire complet: email, password, firstName, lastName, phone, specialty
- * - Validation locale
- * - Appel API: POST /api/users/doctor
- * - Retour à la liste avec message succès
+ * RÔLE:
+ * Formulaire pour ajouter un médecin (email, password, nom, prénom, téléphone, spécialité).
+ * Accessible depuis AdminDoctorsListActivity (bouton FAB).
  *
- * USE CASE: UC-A05
+ * API: POST /api/users/doctor
+ * VALIDATION: Email unique, password 6+ caractères, spécialité obligatoire
  */
 public class AdminAddDoctorActivity extends AppCompatActivity {
 

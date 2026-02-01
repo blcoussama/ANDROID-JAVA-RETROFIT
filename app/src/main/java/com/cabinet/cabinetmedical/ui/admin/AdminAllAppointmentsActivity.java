@@ -28,14 +28,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminAllAppointmentsActivity - Vue globale de tous les RDV (ADMIN)
+ * AdminAllAppointmentsActivity - Monitoring de tous les rendez-vous
  *
- * FONCTIONNALITÉS:
- * - Afficher tous les RDV de tous les médecins
- * - Peut confirmer/annuler n'importe quel RDV
- * - Vue monitoring pour admin
+ * RÔLE:
+ * Affiche tous les RDV de tous les médecins avec possibilité de confirmer ou annuler.
+ * Accessible depuis DashboardAdminActivity (bouton "Voir tous les RDV").
  *
- * USE CASE: UC-A09, UC-A11
+ * API: GET /api/appointments/all
  */
 public class AdminAllAppointmentsActivity extends AppCompatActivity {
 

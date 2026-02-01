@@ -18,25 +18,23 @@ import java.util.List;
  * AdminDoctorAdapter - Adapter pour la liste des médecins (ADMIN)
  *
  * DIFFÉRENCE AVEC DoctorAdapter:
- * - Pas de clic sur les items (lecture seule)
- * - Utilisé uniquement par AdminDoctorsListActivity
- * - DoctorAdapter (patient) ouvre AvailableTimeSlotsActivity au clic
+ * - Affiche TOUS les médecins (pas de filtrage)
+ * - Clic ouvre AdminDoctorDetailsActivity pour gestion complète
+ * - DoctorAdapter (patient) ouvre AvailableTimeSlotsActivity pour réserver
  *
  * UTILISATION:
- * AdminDoctorsListActivity → Liste médecins lecture seule
+ * AdminDoctorsListActivity → Liste médecins avec accès détails/modification
  *
- * FONCTIONNALITÉS FUTURES:
- * - Ajouter boutons "Modifier" et "Supprimer" dans chaque item
- * - Gérer les créneaux du médecin
+ * FONCTIONNALITÉS:
+ * - Affichage nom complet et spécialité
+ * - Clic item → Détails médecin (AdminDoctorDetailsActivity)
  */
 public class AdminDoctorAdapter extends RecyclerView.Adapter<AdminDoctorAdapter.ViewHolder> {
 
     private final List<DoctorResponse> doctors;
 
     /**
-     * Constructeur
-     *
-     * @param doctors Liste des médecins à afficher
+     * ViewHolder pour les items de la liste
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView doctorName;
@@ -49,6 +47,11 @@ public class AdminDoctorAdapter extends RecyclerView.Adapter<AdminDoctorAdapter.
         }
     }
 
+    /**
+     * Constructeur
+     *
+     * @param doctors Liste des médecins à afficher
+     */
     public AdminDoctorAdapter(List<DoctorResponse> doctors) {
         this.doctors = doctors;
     }

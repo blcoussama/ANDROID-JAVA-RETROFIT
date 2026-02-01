@@ -30,15 +30,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DoctorAddTimeSlotActivity - Ajouter un nouveau créneau horaire
+ * DoctorAddTimeSlotActivity - Création d'un nouveau créneau horaire
  *
- * FONCTIONNALITÉS:
- * - Formulaire: Jour de semaine (Spinner), Heure début, Heure fin (TimePickerDialog)
- * - Validation locale: endTime > startTime
- * - Appel API: POST /api/timeslots
- * - Gestion erreur 409 (chevauchement)
+ * RÔLE:
+ * Formulaire pour créer un créneau de disponibilité (jour, heure début/fin).
+ * Accessible depuis DoctorTimeSlotsActivity (bouton FAB).
  *
- * USE CASE: UC-D02 (Créer créneau)
+ * API: POST /api/timeslots
+ * VALIDATION: endTime > startTime, pas de chevauchement (backend vérifie)
  */
 public class DoctorAddTimeSlotActivity extends AppCompatActivity {
 

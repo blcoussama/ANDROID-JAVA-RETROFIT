@@ -24,14 +24,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminEditPatientActivity - Modifier un patient (ADMIN)
+ * AdminEditPatientActivity - Modification d'un patient existant
  *
- * FONCTIONNALITÉS:
- * - Formulaire pré-rempli
- * - Modification: email, password (optionnel), firstName, lastName, phone
- * - Appel API: PUT /api/users/{id}
+ * RÔLE:
+ * Formulaire pré-rempli pour modifier les données d'un patient.
+ * Accessible depuis AdminPatientDetailsActivity (bouton Modifier).
  *
- * USE CASE: UC-A06
+ * API: PUT /api/users/{id}
+ * NOTE: Password optionnel (vide = pas de changement)
  */
 public class AdminEditPatientActivity extends AppCompatActivity {
 

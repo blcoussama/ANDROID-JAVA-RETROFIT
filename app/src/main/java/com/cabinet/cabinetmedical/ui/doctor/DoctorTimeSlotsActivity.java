@@ -31,16 +31,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DoctorTimeSlotsActivity - Gestion des créneaux horaires du médecin
+ * DoctorTimeSlotsActivity - Gestion des créneaux de disponibilité
  *
- * FONCTIONNALITÉS:
- * - Afficher tous les créneaux du médecin (liste)
- * - Ajouter un nouveau créneau (FAB → DoctorAddTimeSlotActivity)
- * - Modifier un créneau (click → DoctorEditTimeSlotActivity)
- * - Supprimer un créneau (long click → dialog confirmation)
+ * RÔLE:
+ * Affiche tous les créneaux du médecin avec possibilité d'ajouter, modifier, supprimer.
+ * Accessible depuis HomeDoctorActivity (bouton "Gérer mes créneaux").
  *
- * USE CASE: UC-D02
- * ÉCRAN: SCR-D03 (Gestion créneaux)
+ * API: GET /api/timeslots/doctor/{doctorId}
+ * ACTIONS: FAB → DoctorAddTimeSlotActivity, Clic item → DoctorEditTimeSlotActivity
  */
 public class DoctorTimeSlotsActivity extends AppCompatActivity {
 

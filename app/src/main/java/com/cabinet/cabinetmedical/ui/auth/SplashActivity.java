@@ -164,14 +164,10 @@ public class SplashActivity extends AppCompatActivity {
      * Rediriger vers l'écran approprié selon le rôle (utilisateur authentifié)
      *
      * REDIRECTION:
-     * - PATIENT → HomePatientActivity (SCR-P02)
-     * - DOCTOR → HomeDoctorActivity (SCR-D01)
-     * - ADMIN → DashboardAdminActivity (SCR-A01)
-     * - Pas de rôle (fallback sécurisé) → LoginActivity
-     *
-     * SÉCURITÉ:
-     * Si le rôle n'existe pas ou est invalide, on redirige vers Login
-     * (principe de sécurité : en cas de doute, déconnecter)
+     * - PATIENT → HomePatientActivity
+     * - DOCTOR → HomeDoctorActivity
+     * - ADMIN → DashboardAdminActivity
+     * - Rôle invalide → LoginActivity (sécurité)
      */
     private void navigateToMain() {
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);

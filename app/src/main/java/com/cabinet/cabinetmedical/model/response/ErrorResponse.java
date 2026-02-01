@@ -7,7 +7,7 @@ public class ErrorResponse {
     private String timestamp;
     private int status;
     private String error;
-    private String message;      // ← MESSAGE BACKEND ICI
+    private String message;      // ← MESSAGE DEPUIS LE BACKEND
     private String path;
     private List<String> errors;  // Pour validation multiple
 

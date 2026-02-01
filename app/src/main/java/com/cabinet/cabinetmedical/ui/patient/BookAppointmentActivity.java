@@ -25,15 +25,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * BookAppointmentActivity - Prendre rendez-vous
+ * BookAppointmentActivity - Confirmation et création d'un rendez-vous
  *
- * FONCTIONNALITÉS:
- * - Afficher résumé RDV (médecin, date, heure)
- * - Saisir motif consultation
- * - Appel API: POST /api/appointments
+ * RÔLE:
+ * Affiche le résumé du RDV choisi (médecin, date, heure), permet de saisir le motif et confirmer.
+ * Accessible depuis AvailableTimeSlotsActivity (clic sur une heure).
  *
- * USE CASE: UC-P06
- * ÉCRAN: SCR-P05
+ * API: POST /api/appointments
+ * RETOUR: Succès → MyAppointmentsActivity
  */
 public class BookAppointmentActivity extends AppCompatActivity {
 

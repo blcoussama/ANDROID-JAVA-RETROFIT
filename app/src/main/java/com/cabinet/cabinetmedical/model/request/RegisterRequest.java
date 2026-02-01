@@ -1,29 +1,14 @@
 package com.cabinet.cabinetmedical.model.request;
 
 /**
- * RegisterRequest - DTO pour l'inscription d'un patient
-
- * UTILISATION:
- * - UC-P01: Créer un compte patient
-
- * ENDPOINT:
- * POST /api/auth/register
-
- * FLOW:
- * 1. Android envoie RegisterRequest
- * 2. Backend valide données
- * 3. Crée User (role=PATIENT)
- * 4. Crée Patient (lié à User)
- * 5. Retourne LoginResponse (avec JWT token)
-
- * EXEMPLE JSON:
- * {
- *   "email": "jean@gmail.com",
- *   "password": "password123",
- *   "firstName": "Jean",
- *   "lastName": "Dupont",
- *   "phone": "0612345678"
- * }
+ * RegisterRequest - Inscription d'un nouveau patient
+ *
+ * RÔLE:
+ * Envoie les données pour créer un compte patient (email, mot de passe, nom, prénom, téléphone).
+ * Utilisé par RegisterActivity.
+ *
+ * ENDPOINT: POST /api/auth/register
+ * RETOUR: LoginResponse (compte créé + connexion automatique avec token JWT)
  */
 public class RegisterRequest {
 

@@ -1,21 +1,14 @@
 package com.cabinet.cabinetmedical.model.request;
 
 /**
- * LoginRequest - DTO pour la requête de connexion
-
- * UTILISATION:
- * - UC-P02: Patient se connecte
- * - UC-D01: Doctor se connecte
- * - UC-A01: Admin se connecte
-
- * ENDPOINT:
- * POST /api/auth/login
-
- * EXEMPLE JSON:
- * {
- *   "email": "jean@gmail.com",
- *   "password": "password123"
- * }
+ * LoginRequest - Requête de connexion pour tous les utilisateurs
+ *
+ * RÔLE:
+ * Envoie les identifiants (email + mot de passe) au backend pour authentification.
+ * Utilisé par LoginActivity pour connecter patient, médecin ou admin.
+ *
+ * ENDPOINT: POST /api/auth/login
+ * RETOUR: LoginResponse (token JWT + infos utilisateur)
  */
 public class LoginRequest {
 

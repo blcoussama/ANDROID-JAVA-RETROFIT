@@ -25,22 +25,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DoctorListActivity - Liste des médecins pour les PATIENTS
+ * DoctorListActivity - Liste de tous les médecins du cabinet
  *
- * FONCTIONNALITÉS:
- * - Affiche liste de tous les médecins (RecyclerView)
- * - Appel API: GET /api/doctors
- * - Affichage: Nom complet + Spécialité
+ * RÔLE:
+ * Affiche tous les médecins (nom, spécialité) pour que le patient choisisse avec qui prendre RDV.
+ * Accessible depuis HomePatientActivity (bouton "Voir les médecins").
  *
- * USE CASE:
- * - UC-P04: Patient voir liste médecins
- *
- * ÉCRAN: SCR-P03 (version basique)
- *
- * FUTURES FONCTIONNALITÉS:
- * - Filtre par spécialité
- * - Clic médecin → Voir créneaux disponibles
- * - Recherche par nom
+ * API: GET /api/doctors
+ * ACTIONS: Clic médecin → AvailableTimeSlotsActivity
  */
 public class DoctorListActivity extends AppCompatActivity {
 

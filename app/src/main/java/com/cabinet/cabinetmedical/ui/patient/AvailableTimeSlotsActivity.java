@@ -28,15 +28,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AvailableTimeSlotsActivity - Créneaux disponibles pour un médecin
+ * AvailableTimeSlotsActivity - Consultation des créneaux disponibles d'un médecin
  *
- * FONCTIONNALITÉS:
- * - CalendarView pour sélectionner une date
- * - Liste des heures disponibles pour la date choisie
- * - Appel API: GET /api/timeslots/available?doctorId={id}&date={date}
+ * RÔLE:
+ * Affiche un calendrier pour choisir une date, puis montre les heures disponibles.
+ * Accessible depuis DoctorListActivity (clic sur un médecin).
  *
- * USE CASE: UC-P05
- * ÉCRAN: SCR-P04
+ * API: GET /api/timeslots/available?doctorId={id}&date={date}
+ * ACTIONS: Clic sur une heure → BookAppointmentActivity
  */
 public class AvailableTimeSlotsActivity extends AppCompatActivity {
 

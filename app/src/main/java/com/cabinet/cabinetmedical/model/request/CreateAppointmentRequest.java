@@ -1,16 +1,14 @@
 package com.cabinet.cabinetmedical.model.request;
 
 /**
- * CreateAppointmentRequest - Modèle pour créer un rendez-vous
+ * CreateAppointmentRequest - Création d'un rendez-vous par le patient
+ *
+ * RÔLE:
+ * Envoie les données pour réserver un rendez-vous (médecin, date/heure, motif).
+ * Utilisé par BookAppointmentActivity.
  *
  * ENDPOINT: POST /api/appointments
- *
- * STRUCTURE:
- * {
- *   "doctorId": 1,
- *   "dateTime": "2026-02-03T09:00:00",
- *   "reason": "Consultation générale"
- * }
+ * FORMAT dateTime: "YYYY-MM-DDTHH:mm:ss" (ex: "2026-02-03T09:00:00")
  */
 public class CreateAppointmentRequest {
 

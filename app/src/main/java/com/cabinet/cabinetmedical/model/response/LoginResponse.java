@@ -1,35 +1,16 @@
 package com.cabinet.cabinetmedical.model.response;
 
 /**
- * LoginResponse - DTO pour la réponse de connexion
-
- * UTILISATION:
- * - Retourné après login réussi (UC-P02, UC-D01, UC-A01)
- * - Retourné après inscription réussie (UC-P01)
-
+ * LoginResponse - Réponse après connexion ou inscription réussie
+ *
+ * RÔLE:
+ * Contient le token JWT et les infos utilisateur pour authentifier les requêtes suivantes.
+ * Utilisé par LoginActivity et RegisterActivity pour stocker les données en SharedPreferences.
+ *
  * CONTENU:
- * - JWT token (pour authentification des requêtes suivantes)
- * - Informations utilisateur (id, email, role, nom)
+ * - token: JWT à envoyer dans Header Authorization (Bearer {token})
+ * - userId, email, firstName, lastName, role
  * - patientId (si PATIENT) ou doctorId (si DOCTOR)
-
- * FLOW:
- * 1. Android envoie LoginRequest
- * 2. Backend retourne LoginResponse avec token
- * 3. Android stocke token dans SharedPreferences
- * 4. Android envoie token dans toutes les requêtes suivantes:
- *    Header: Authorization: Bearer {token}
-
- * EXEMPLE JSON:
- * {
- *   "token": "eyJhbGciOiJIUzI1NiJ9...",
- *   "userId": 1,
- *   "email": "jean@gmail.com",
- *   "firstName": "Jean",
- *   "lastName": "Dupont",
- *   "role": "PATIENT",
- *   "patientId": 1,
- *   "doctorId": null
- * }
  */
 public class LoginResponse {
 

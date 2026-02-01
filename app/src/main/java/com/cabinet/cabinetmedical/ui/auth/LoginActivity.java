@@ -142,10 +142,9 @@ public class LoginActivity extends AppCompatActivity {
      * Rediriger vers l'écran approprié selon le rôle de l'utilisateur
      *
      * REDIRECTION:
-     * - PATIENT → HomePatientActivity (SCR-P02)
-     * - DOCTOR → HomeDoctorActivity (SCR-D01)
-     * - ADMIN → DashboardAdminActivity (SCR-A01)
-     * - Autre (fallback) → MainActivity
+     * - PATIENT → HomePatientActivity
+     * - DOCTOR → HomeDoctorActivity
+     * - ADMIN → DashboardAdminActivity
      *
      * @param role Rôle de l'utilisateur (PATIENT, DOCTOR, ADMIN)
      */

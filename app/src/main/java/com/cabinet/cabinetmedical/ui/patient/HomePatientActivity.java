@@ -12,22 +12,16 @@ import com.cabinet.cabinetmedical.ui.auth.LoginActivity;
 import com.google.android.material.button.MaterialButton;
 
 /**
- * HomePatientActivity - Écran d'accueil pour les PATIENTS
+ * HomePatientActivity - Écran d'accueil du patient
  *
- * FONCTIONNALITÉS ACTUELLES:
- * - Affichage message de bienvenue avec prénom du patient
- * - Bouton déconnexion (clear token + retour Login)
+ * RÔLE:
+ * Dashboard patient avec navigation vers les fonctionnalités principales.
+ * Premier écran affiché après connexion patient (depuis SplashActivity ou LoginActivity).
  *
- * FONCTIONNALITÉS FUTURES (selon ANDROID-CONCEPTION-PLANNING.md):
- * - Prochain RDV (si existe)
- * - Bouton "Prendre RDV" → Liste médecins
- * - Bouton "Mes RDV" → Historique rendez-vous
- *
- * USE CASES COUVERTS:
- * - UC-P02: Se connecter (redirection ici après login)
- * - Déconnexion
- *
- * ÉCRAN: SCR-P02 (version basique)
+ * NAVIGATION:
+ * - Bouton "Voir les médecins" → DoctorListActivity
+ * - Bouton "Mes rendez-vous" → MyAppointmentsActivity
+ * - Bouton "Déconnexion" → Retour LoginActivity
  */
 public class HomePatientActivity extends AppCompatActivity {
 

@@ -1,37 +1,14 @@
 package com.cabinet.cabinetmedical.model.response;
 
 /**
- * AppointmentResponse - DTO pour les informations d'un rendez-vous
+ * AppointmentResponse - Informations complètes d'un rendez-vous
  *
- * UTILISATION:
- * - UC-P03: Patient consulte historique RDV
- * - UC-P06: Patient prend RDV (confirmation)
- * - UC-D03: Doctor consulte ses RDV
- * - UC-A09: Admin voir tous les RDV
+ * RÔLE:
+ * Représente un rendez-vous avec toutes ses données (patient, médecin, date, statut).
+ * Utilisé par MyAppointmentsActivity, DoctorAppointmentsActivity, AdminAllAppointmentsActivity.
  *
- * CONTENU:
- * - Informations RDV (date, heure, motif, status)
- * - Informations Patient (nom complet)
- * - Informations Doctor (nom complet, spécialité)
- * - Informations annulation (si annulé)
- *
- * EXEMPLE JSON:
- * {
- *   "id": 1,
- *   "patientId": 1,
- *   "patientName": "Jean Dupont",
- *   "patientPhone": "0612345678",
- *   "doctorId": 1,
- *   "doctorName": "Dr. Martin Durand",
- *   "doctorSpecialty": "Cardiologue",
- *   "dateTime": "2026-02-03T14:00:00",
- *   "reason": "Consultation cardiaque",
- *   "status": "PENDING",
- *   "cancelledBy": null,
- *   "cancellationReason": null,
- *   "createdAt": "2026-01-31T10:00:00",
- *   "updatedAt": "2026-01-31T10:00:00"
- * }
+ * STATUTS POSSIBLES: PENDING, CONFIRMED, CANCELLED
+ * MÉTHODES HELPER: getFormattedDateTime(), getStatusLabel(), getSpecialtyOrDefault()
  */
 public class AppointmentResponse {
 

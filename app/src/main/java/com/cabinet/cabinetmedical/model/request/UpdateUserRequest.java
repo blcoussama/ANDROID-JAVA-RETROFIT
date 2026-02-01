@@ -1,23 +1,14 @@
 package com.cabinet.cabinetmedical.model.request;
 
 /**
- * UpdateUserRequest - DTO pour modifier un utilisateur (Admin uniquement)
+ * UpdateUserRequest - Modification d'un utilisateur par l'admin
  *
- * UTILISATION:
- * - Admin modifie un utilisateur: PUT /api/users/{id}
+ * RÔLE:
+ * Envoie les données pour modifier un patient ou un médecin existant.
+ * Utilisé par AdminEditPatientActivity et AdminEditDoctorActivity.
  *
- * STRUCTURE BACKEND:
- * {
- *   "email": "newemail@email.com",
- *   "password": "",  // Vide = ne pas modifier, ou nouveau password
- *   "firstName": "Jean",
- *   "lastName": "Dupont",
- *   "phone": "0612345678"
- * }
- *
- * NOTE:
- * - Password OPTIONNEL: si vide ou null = pas de changement
- * - Si password fourni = sera mis à jour
+ * ENDPOINT: PUT /api/users/{id}
+ * NOTE: Password optionnel (vide = pas de changement)
  */
 public class UpdateUserRequest {
     private String email;

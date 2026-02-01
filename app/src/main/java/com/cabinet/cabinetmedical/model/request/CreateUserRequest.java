@@ -1,26 +1,15 @@
 package com.cabinet.cabinetmedical.model.request;
 
 /**
- * CreateUserRequest - DTO pour créer un utilisateur (Admin uniquement)
+ * CreateUserRequest - Création d'un utilisateur par l'admin
  *
- * UTILISATION:
- * - Admin crée un patient: POST /api/users/patient
- * - Admin crée un médecin: POST /api/users/doctor
+ * RÔLE:
+ * Envoie les données pour créer un patient ou un médecin.
+ * Utilisé par AdminAddPatientActivity et AdminAddDoctorActivity.
  *
- * STRUCTURE BACKEND:
- * {
- *   "email": "doctor@email.com",
- *   "password": "Password123",
- *   "firstName": "Jean",
- *   "lastName": "Dupont",
- *   "phone": "0612345678",
- *   "specialty": "Cardiologue"  // Obligatoire pour DOCTOR, null pour PATIENT
- * }
- *
- * VALIDATION:
- * - Email unique
- * - Password minimum 6 caractères
- * - Specialty obligatoire SI on crée un DOCTOR
+ * ENDPOINTS:
+ * - POST /api/users/patient (specialty = null)
+ * - POST /api/users/doctor (specialty obligatoire)
  */
 public class CreateUserRequest {
     private String email;

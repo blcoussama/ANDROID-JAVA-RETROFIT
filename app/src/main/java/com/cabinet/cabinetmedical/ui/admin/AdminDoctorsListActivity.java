@@ -26,15 +26,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminDoctorsListActivity - Liste de tous les médecins (ADMIN)
+ * AdminDoctorsListActivity - Liste de tous les médecins du cabinet
  *
- * FONCTIONNALITÉS:
- * - Afficher tous les médecins du cabinet
- * - Vue d'ensemble pour l'admin
- * - Peut voir détails de chaque médecin
+ * RÔLE:
+ * Affiche tous les médecins avec RecyclerView (nom, spécialité).
+ * Accessible depuis DashboardAdminActivity (bouton "Gérer les médecins").
  *
- * USE CASE: UC-A03, UC-A04
- * ÉCRAN: SCR-A02
+ * ACTIONS: Clic item → AdminDoctorDetailsActivity, FAB → AdminAddDoctorActivity
  */
 public class AdminDoctorsListActivity extends AppCompatActivity {
 

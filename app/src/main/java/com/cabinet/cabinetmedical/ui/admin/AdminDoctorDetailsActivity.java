@@ -28,14 +28,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminDoctorDetailsActivity - Détails d'un médecin (ADMIN)
+ * AdminDoctorDetailsActivity - Détails et actions sur un médecin
  *
- * FONCTIONNALITÉS:
- * - Afficher toutes les infos du médecin
- * - Bouton "Modifier" → Ouvrir AdminEditDoctorActivity
- * - Bouton "Supprimer" → Dialog confirmation + suppression
+ * RÔLE:
+ * Affiche les infos complètes d'un médecin avec possibilité de modifier ou supprimer.
+ * Accessible depuis AdminDoctorsListActivity (clic sur un item).
  *
- * USE CASE: UC-A06, UC-A07
+ * ACTIONS: Bouton Modifier → AdminEditDoctorActivity, Bouton Supprimer → Dialog confirmation
  */
 public class AdminDoctorDetailsActivity extends AppCompatActivity {
 

@@ -22,15 +22,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DashboardAdminActivity - Tableau de bord pour les ADMIN
+ * DashboardAdminActivity - Tableau de bord admin avec statistiques
  *
- * FONCTIONNALITÉS:
- * - Affichage statistiques (RDV, médecins, patients)
- * - Cards Material Design avec chiffres clés
- * - Boutons navigation vers sections admin
+ * RÔLE:
+ * Écran d'accueil admin avec chiffres clés et navigation vers gestion médecins/patients/RDV.
+ * Premier écran affiché après connexion admin (depuis SplashActivity ou LoginActivity).
  *
- * USE CASES: UC-A01, UC-A02
- * ÉCRAN: SCR-A01
+ * STATISTIQUES: RDV aujourd'hui/semaine, RDV par statut, nombre médecins/patients
+ * NAVIGATION: Boutons vers AdminDoctorsListActivity, AdminPatientsListActivity, AdminAllAppointmentsActivity
  */
 public class DashboardAdminActivity extends AppCompatActivity {
 

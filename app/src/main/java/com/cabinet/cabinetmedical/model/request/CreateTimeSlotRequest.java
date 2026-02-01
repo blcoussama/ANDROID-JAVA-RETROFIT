@@ -3,30 +3,14 @@ package com.cabinet.cabinetmedical.model.request;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * CreateTimeSlotRequest - DTO pour créer un créneau horaire
+ * CreateTimeSlotRequest - Création d'un créneau horaire par le médecin
  *
- * UTILISATION:
- * - UC-D02: Doctor créer ses créneaux
- * - UC-A08: Admin créer créneaux pour n'importe quel médecin
+ * RÔLE:
+ * Envoie les données pour créer un nouveau créneau (jour, heure début/fin).
+ * Utilisé par DoctorAddTimeSlotActivity.
  *
- * ENDPOINT:
- * POST /api/timeslots
- *
- * EXEMPLE JSON:
- * {
- *   "doctorId": 1,
- *   "dayOfWeek": "MONDAY",
- *   "startTime": "09:00:00",
- *   "endTime": "12:00:00"
- * }
- *
- * VALIDATION:
- * - doctorId obligatoire
- * - dayOfWeek obligatoire (MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
- * - startTime obligatoire (format HH:mm:ss)
- * - endTime obligatoire (format HH:mm:ss)
- * - startTime < endTime
- * - Pas de chevauchement avec créneaux existants (vérifié par backend)
+ * ENDPOINT: POST /api/timeslots
+ * VALIDATION: startTime < endTime, pas de chevauchement (vérifié backend)
  */
 public class CreateTimeSlotRequest {
 

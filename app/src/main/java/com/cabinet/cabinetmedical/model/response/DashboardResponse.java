@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DashboardResponse - DTO pour le tableau de bord admin
+ * DashboardResponse - Statistiques du tableau de bord admin
  *
- * UTILISATION:
- * - UC-A02: Admin voir tableau de bord état rendez-vous
- *
- * ENDPOINT: GET /api/dashboard
+ * RÔLE:
+ * Contient les statistiques globales pour le dashboard admin (rendez-vous, utilisateurs).
+ * Utilisé par DashboardAdminActivity.
  *
  * CONTENU:
- * - Statistiques RDV (total, par status, récents)
- * - Statistiques utilisateurs (médecins, patients)
+ * - RDV aujourd'hui/semaine, par statut (PENDING/CONFIRMED/CANCELLED)
+ * - Nombre médecins/patients/utilisateurs totaux
+ * - Liste rendez-vous récents
  */
 public class DashboardResponse {
 

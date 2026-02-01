@@ -3,27 +3,14 @@ package com.cabinet.cabinetmedical.model.response;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * TimeSlotResponse - DTO pour la réponse d'un créneau horaire
+ * TimeSlotResponse - Informations d'un créneau horaire
  *
- * UTILISATION:
- * - UC-D02: Doctor voir/gérer ses créneaux
- * - UC-A08: Admin gérer créneaux de tous les médecins
+ * RÔLE:
+ * Représente un créneau de disponibilité du médecin (jour, horaires, durée).
+ * Utilisé par DoctorTimeSlotsActivity (médecin gère ses créneaux)
+ * et AvailableTimeSlotsActivity (patient consulte les créneaux disponibles).
  *
- * ENDPOINT:
- * GET /api/timeslots/doctor/{doctorId}
- *
- * EXEMPLE JSON:
- * {
- *   "id": 1,
- *   "doctorId": 1,
- *   "doctorName": "Dr. Saad Doctor",
- *   "doctorSpecialty": "Pédiatre",
- *   "dayOfWeek": "MONDAY",
- *   "dayOfWeekFr": "Lundi",
- *   "startTime": "09:00:00",
- *   "endTime": "12:00:00",
- *   "durationMinutes": 180
- * }
+ * MÉTHODES HELPER: getTimeRange() ("09:00 - 12:00"), getFormattedDuration() ("3h")
  */
 public class TimeSlotResponse {
 

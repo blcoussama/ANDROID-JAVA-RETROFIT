@@ -27,14 +27,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminPatientDetailsActivity - Détails d'un patient (ADMIN)
+ * AdminPatientDetailsActivity - Détails et actions sur un patient
  *
- * FONCTIONNALITÉS:
- * - Afficher toutes les infos du patient
- * - Bouton "Modifier" → AdminEditPatientActivity
- * - Bouton "Supprimer" → Dialog confirmation + suppression
+ * RÔLE:
+ * Affiche les infos complètes d'un patient avec possibilité de modifier ou supprimer.
+ * Accessible depuis AdminPatientsListActivity (clic sur un item).
  *
- * USE CASE: UC-A06, UC-A07
+ * ACTIONS: Bouton Modifier → AdminEditPatientActivity, Bouton Supprimer → Dialog confirmation
  */
 public class AdminPatientDetailsActivity extends AppCompatActivity {
 

@@ -28,16 +28,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DoctorAppointmentsActivity - Liste des rendez-vous du médecin
+ * DoctorAppointmentsActivity - Gestion des rendez-vous du médecin
  *
- * FONCTIONNALITÉS:
- * - Afficher tous les RDV du médecin
- * - Confirmer un RDV (PENDING → CONFIRMED)
- * - Annuler un RDV (avec raison)
- * - Appel API: GET /api/appointments/doctor/{doctorId}
+ * RÔLE:
+ * Affiche tous les RDV du médecin avec possibilité de confirmer ou annuler.
+ * Accessible depuis HomeDoctorActivity (bouton "Mes rendez-vous").
  *
- * USE CASE: UC-D03
- * ÉCRAN: SCR-D02
+ * API: GET /api/appointments/doctor/{doctorId}
+ * ACTIONS: Confirmer (PENDING → CONFIRMED), Annuler (avec raison)
  */
 public class DoctorAppointmentsActivity extends AppCompatActivity {
 

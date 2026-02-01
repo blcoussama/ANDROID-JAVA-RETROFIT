@@ -27,16 +27,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * AdminPatientsListActivity - Liste de tous les patients (ADMIN)
+ * AdminPatientsListActivity - Liste de tous les patients du cabinet
  *
- * FONCTIONNALITÉS:
- * - Afficher tous les patients
- * - Vue d'ensemble pour l'admin
- * - Peut voir détails de chaque patient
- * - Ajouter nouveau patient
+ * RÔLE:
+ * Affiche tous les patients avec RecyclerView (nom, email, téléphone).
+ * Accessible depuis DashboardAdminActivity (bouton "Gérer les patients").
  *
- * USE CASE: UC-A03, UC-A04
- * ÉCRAN: SCR-A05 (Gestion patients)
+ * ACTIONS: Clic item → AdminPatientDetailsActivity, FAB → AdminAddPatientActivity
  */
 public class AdminPatientsListActivity extends AppCompatActivity {
 
