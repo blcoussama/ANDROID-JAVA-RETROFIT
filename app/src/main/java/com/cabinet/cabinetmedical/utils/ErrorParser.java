@@ -44,8 +44,24 @@ public class ErrorParser {
                 Gson gson = new Gson();
                 ErrorResponse error = gson.fromJson(errorJson, ErrorResponse.class);
 
-                if (error != null && error.getMessage() != null) {
-                    return error.getMessage();
+                if (error != null) {
+                    // Si erreurs de validation existent, les afficher
+                    if (error.getErrors() != null && !error.getErrors().isEmpty()) {
+                        // Joindre toutes les erreurs avec des sauts de ligne
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < error.getErrors().size(); i++) {
+                            sb.append(error.getErrors().get(i));
+                            if (i < error.getErrors().size() - 1) {
+                                sb.append("\n");
+                            }
+                        }
+                        return sb.toString();
+                    }
+
+                    // Sinon, retourner le message général
+                    if (error.getMessage() != null) {
+                        return error.getMessage();
+                    }
                 }
             }
         } catch (Exception e) {

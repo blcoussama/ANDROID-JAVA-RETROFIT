@@ -40,6 +40,7 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
     private TextInputEditText firstNameInput;
     private TextInputEditText lastNameInput;
     private TextInputEditText phoneInput;
+    private TextInputEditText specialtyInput;
     private MaterialButton saveButton;
     private ProgressBar progressBar;
     private TextView errorMessage;
@@ -67,6 +68,7 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
         String firstName = getIntent().getStringExtra("firstName");
         String lastName = getIntent().getStringExtra("lastName");
         String phone = getIntent().getStringExtra("phone");
+        String specialty = getIntent().getStringExtra("specialty");
 
         if (userId == -1) {
             Toast.makeText(this, "Erreur: ID utilisateur manquant", Toast.LENGTH_SHORT).show();
@@ -80,6 +82,7 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
         firstNameInput = findViewById(R.id.input_first_name);
         lastNameInput = findViewById(R.id.input_last_name);
         phoneInput = findViewById(R.id.input_phone);
+        specialtyInput = findViewById(R.id.input_specialty);
         saveButton = findViewById(R.id.button_save);
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.error_message);
@@ -89,6 +92,7 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
         firstNameInput.setText(firstName);
         lastNameInput.setText(lastName);
         phoneInput.setText(phone);
+        specialtyInput.setText(specialty);
 
         // Bouton enregistrer
         saveButton.setOnClickListener(v -> validateAndSave());
@@ -106,6 +110,7 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
         String firstName = firstNameInput.getText() != null ? firstNameInput.getText().toString().trim() : "";
         String lastName = lastNameInput.getText() != null ? lastNameInput.getText().toString().trim() : "";
         String phone = phoneInput.getText() != null ? phoneInput.getText().toString().trim() : "";
+        String specialty = specialtyInput.getText() != null ? specialtyInput.getText().toString().trim() : "";
 
         // Validation locale
         if (email.isEmpty()) {
@@ -120,6 +125,11 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
 
         if (lastName.isEmpty()) {
             showError("Le nom est obligatoire");
+            return;
+        }
+
+        if (specialty.isEmpty()) {
+            showError("La spécialité est obligatoire pour un médecin");
             return;
         }
 
@@ -140,7 +150,8 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
                 password.isEmpty() ? "" : password,  // Vide = ne pas modifier
                 firstName,
                 lastName,
-                phone.isEmpty() ? null : phone
+                phone.isEmpty() ? null : phone,
+                specialty
         );
 
         // Appel API

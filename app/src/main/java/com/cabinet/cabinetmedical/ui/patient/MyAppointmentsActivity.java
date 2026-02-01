@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cabinet.cabinetmedical.R;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
@@ -51,11 +53,17 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
 
-        // Titre de l'écran
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Mes rendez-vous");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers Home
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, HomePatientActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Récupérer patientId depuis SharedPreferences
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
@@ -147,6 +155,10 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        // Retour vers Home Patient
+        Intent intent = new Intent(this, HomePatientActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
         return true;
     }

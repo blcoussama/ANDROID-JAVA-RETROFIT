@@ -41,6 +41,7 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
     private TextView doctorName;
     private TextView doctorEmail;
     private TextView doctorPhone;
+    private TextView doctorSpecialty;
     private TextView doctorRole;
     private TextView doctorCreatedAt;
     private TextView errorMessage;
@@ -50,6 +51,7 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
 
     private ApiService apiService;
     private Long userId;
+    private String specialty;  // Stocké depuis l'Intent
     private UserResponse currentUser;
 
     @Override
@@ -66,8 +68,9 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
         // Initialiser Retrofit
         apiService = ApiClient.getClient(this).create(ApiService.class);
 
-        // Récupérer userId depuis l'Intent
+        // Récupérer userId et specialty depuis l'Intent
         userId = getIntent().getLongExtra("userId", -1);
+        specialty = getIntent().getStringExtra("specialty");
         if (userId == -1) {
             Toast.makeText(this, "Erreur: ID utilisateur manquant", Toast.LENGTH_SHORT).show();
             finish();
@@ -78,6 +81,7 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
         doctorName = findViewById(R.id.doctor_name);
         doctorEmail = findViewById(R.id.doctor_email);
         doctorPhone = findViewById(R.id.doctor_phone);
+        doctorSpecialty = findViewById(R.id.doctor_specialty);
         doctorRole = findViewById(R.id.doctor_role);
         doctorCreatedAt = findViewById(R.id.doctor_created_at);
         errorMessage = findViewById(R.id.error_message);
@@ -132,11 +136,15 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
         doctorName.setText(user.getFullName());
         doctorEmail.setText(user.getEmail());
         doctorPhone.setText(user.getPhone() != null ? user.getPhone() : "Non renseigné");
+        doctorSpecialty.setText(user.getSpecialty() != null ? user.getSpecialty() : "Non renseignée");
         doctorRole.setText(user.getRole());
 
         // Formater la date de création
         String formattedDate = formatDate(user.getCreatedAt());
         doctorCreatedAt.setText(formattedDate);
+
+        // Mettre à jour la specialty locale pour l'édition
+        specialty = user.getSpecialty();
     }
 
     /**
@@ -194,6 +202,7 @@ public class AdminDoctorDetailsActivity extends AppCompatActivity {
         intent.putExtra("firstName", currentUser.getFirstName());
         intent.putExtra("lastName", currentUser.getLastName());
         intent.putExtra("phone", currentUser.getPhone());
+        intent.putExtra("specialty", specialty);
         startActivity(intent);
     }
 

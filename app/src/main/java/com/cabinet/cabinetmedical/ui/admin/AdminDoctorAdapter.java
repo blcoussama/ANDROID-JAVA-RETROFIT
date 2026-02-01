@@ -75,6 +75,7 @@ public class AdminDoctorAdapter extends RecyclerView.Adapter<AdminDoctorAdapter.
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), AdminDoctorDetailsActivity.class);
             intent.putExtra("userId", doctor.getUserId());
+            intent.putExtra("specialty", doctor.getSpecialty());
             v.getContext().startActivity(intent);
         });
     }

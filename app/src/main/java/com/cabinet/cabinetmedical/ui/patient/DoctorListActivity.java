@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cabinet.cabinetmedical.R;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.DoctorResponse;
@@ -54,11 +56,17 @@ public class DoctorListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_list);
 
-        // Titre de l'écran
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Liste des médecins");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers Home
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, HomePatientActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Initialiser Retrofit
         apiService = ApiClient.getClient(this).create(ApiService.class);

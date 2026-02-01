@@ -29,6 +29,7 @@ public class UserResponse {
     private String role;  // PATIENT, DOCTOR, ADMIN
     private String createdAt;
     private String lastLoginAt;
+    private String specialty;  // Pour DOCTOR uniquement (null pour PATIENT/ADMIN)
 
     // Constructeur vide
     public UserResponse() {
@@ -110,6 +111,14 @@ public class UserResponse {
 
     public void setLastLoginAt(String lastLoginAt) {
         this.lastLoginAt = lastLoginAt;
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
     }
 
     /**

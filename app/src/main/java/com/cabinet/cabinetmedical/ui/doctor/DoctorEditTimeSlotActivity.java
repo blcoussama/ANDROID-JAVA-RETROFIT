@@ -19,6 +19,7 @@ import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.UpdateTimeSlotRequest;
 import com.cabinet.cabinetmedical.model.response.TimeSlotResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -60,11 +61,12 @@ public class DoctorEditTimeSlotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_edit_timeslot);
 
-        // Titre
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Modifier le créneau");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers liste créneaux
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Récupérer les données du créneau depuis l'Intent
         timeSlotId = getIntent().getLongExtra("timeslot_id", -1);

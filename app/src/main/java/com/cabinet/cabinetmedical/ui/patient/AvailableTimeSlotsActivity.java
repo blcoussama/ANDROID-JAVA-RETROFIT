@@ -15,6 +15,7 @@ import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,11 +58,12 @@ public class AvailableTimeSlotsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_available_time_slots);
 
-        // Titre de l'écran
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Créneaux disponibles");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers liste médecins
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Récupérer les infos du médecin depuis l'Intent
         doctorId = getIntent().getLongExtra("doctorId", -1);

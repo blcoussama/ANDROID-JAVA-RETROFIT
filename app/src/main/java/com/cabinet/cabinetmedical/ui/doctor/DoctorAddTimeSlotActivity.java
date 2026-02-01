@@ -18,6 +18,7 @@ import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.CreateTimeSlotRequest;
 import com.cabinet.cabinetmedical.model.response.TimeSlotResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -59,11 +60,12 @@ public class DoctorAddTimeSlotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_add_timeslot);
 
-        // Titre
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Ajouter un créneau");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers liste créneaux
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Récupérer doctorId depuis SharedPreferences
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);

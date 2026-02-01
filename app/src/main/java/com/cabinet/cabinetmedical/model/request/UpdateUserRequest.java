@@ -25,17 +25,27 @@ public class UpdateUserRequest {
     private String firstName;
     private String lastName;
     private String phone;
+    private String specialty;  // Pour médecins uniquement
 
     /**
-     * Constructeur complet
+     * Constructeur complet avec specialty (pour médecins)
      */
     public UpdateUserRequest(String email, String password, String firstName,
-                            String lastName, String phone) {
+                            String lastName, String phone, String specialty) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.specialty = specialty;
+    }
+
+    /**
+     * Constructeur sans specialty (pour patients)
+     */
+    public UpdateUserRequest(String email, String password, String firstName,
+                            String lastName, String phone) {
+        this(email, password, firstName, lastName, phone, null);
     }
 
     /**
@@ -84,5 +94,13 @@ public class UpdateUserRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
     }
 }

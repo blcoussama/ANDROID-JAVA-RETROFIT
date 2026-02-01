@@ -17,6 +17,7 @@ import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.TimeSlotResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -58,11 +59,17 @@ public class DoctorTimeSlotsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_timeslots);
 
-        // Titre de l'écran avec bouton retour
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Mes créneaux horaires");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers Home
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeDoctorActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Récupérer doctorId depuis SharedPreferences
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);

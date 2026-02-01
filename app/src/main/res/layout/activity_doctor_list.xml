@@ -1,36 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <!-- ProgressBar (loading) -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-
-    <!-- RecyclerView (liste des médecins) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_doctors"
+    <!-- Toolbar avec bouton retour -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Liste des médecins"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="@android:color/white" />
 
-    <!-- Message d'erreur -->
-    <TextView
-        android:id="@+id/error_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Erreur de chargement"
-        android:textColor="@color/design_default_color_error"
-        android:textSize="16sp"
-        android:visibility="gone"
-        android:gravity="center"
-        android:padding="16dp" />
+    <!-- Contenu principal avec overlay -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
 
-</RelativeLayout>
+        <!-- RecyclerView (liste des médecins) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_doctors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp" />
+
+        <!-- ProgressBar (loading) -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Message d'erreur -->
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Erreur de chargement"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:padding="16dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

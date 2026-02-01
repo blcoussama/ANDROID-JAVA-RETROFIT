@@ -16,6 +16,7 @@ import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.CreateAppointmentRequest;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -56,11 +57,12 @@ public class BookAppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
 
-        // Titre de l'écran
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Prendre rendez-vous");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Configurer la Toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Bouton retour vers créneaux disponibles
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Récupérer patientId depuis SharedPreferences
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
@@ -126,12 +128,12 @@ public class BookAppointmentActivity extends AppCompatActivity {
                 showLoading(false);
 
                 if (response.isSuccessful()) {
-                    // Succès → Retour Home avec message
+                    // Succès → Redirection vers Mes rendez-vous
                     Toast.makeText(BookAppointmentActivity.this,
-                            "Rendez-vous confirmé !", Toast.LENGTH_LONG).show();
+                            "Rendez-vous créé avec succès !", Toast.LENGTH_LONG).show();
 
-                    // Retour à HomePatientActivity
-                    Intent intent = new Intent(BookAppointmentActivity.this, HomePatientActivity.class);
+                    // Redirection vers MyAppointmentsActivity pour voir le RDV créé
+                    Intent intent = new Intent(BookAppointmentActivity.this, MyAppointmentsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

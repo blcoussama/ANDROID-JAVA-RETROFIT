@@ -96,6 +96,23 @@
                     android:textSize="16sp"
                     android:layout_marginBottom="16dp" />
 
+                <!-- Spécialité -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Spécialité"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/doctor_specialty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pédiatre"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="16dp" />
+
                 <!-- Rôle -->
                 <TextView
                     android:layout_width="wrap_content"
