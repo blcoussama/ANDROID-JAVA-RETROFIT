@@ -11,7 +11,7 @@ import java.util.Map;
  * Utilisé par DashboardAdminActivity.
  *
  * CONTENU:
- * - RDV aujourd'hui/semaine, par statut (PENDING/CONFIRMED/CANCELLED)
+ * - RDV aujourd'hui/semaine, par statut [ En Attente(PENDING) / Confirmé(CONFIRMED) / Annulé(CANCELLED) ]
  * - Nombre médecins/patients/utilisateurs totaux
  * - Liste rendez-vous récents
  */
