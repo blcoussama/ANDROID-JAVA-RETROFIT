@@ -58,7 +58,7 @@ public class ApiClient {
      * Dans terminal WSL2: ip addr show eth0 | grep inet
      * Résultat: inet 172.25.135.62/20
      */
-    private static final String BASE_URL = "http://172.25.135.62:8080/";
+    private static final String BASE_URL = "https://android-mobile-java-springboot-app-backend-production.up.railway.app/";
 
     /**
      * Instance Retrofit (singleton)
