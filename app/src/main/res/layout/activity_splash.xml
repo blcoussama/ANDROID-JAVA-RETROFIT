@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Loading indicator -->
-    
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"

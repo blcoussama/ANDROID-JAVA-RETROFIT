@@ -53,10 +53,6 @@ import retrofit2.Response;
  * - Durée splash: 2000ms (2 secondes)
  * - Handler pour délai asynchrone
  * - JwtInterceptor ajoute automatiquement le token dans le header
- *
- * TODO FUTUR:
- * - Rediriger selon rôle (PATIENT → HomePatient, DOCTOR → HomeDoctor)
- * - Afficher animation (fade in/out)
  */
 public class SplashActivity extends AppCompatActivity {
 
