@@ -1,6 +1,5 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
-import java.util.Locale;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -22,6 +21,8 @@ import com.cabinet.cabinetmedical.utils.ErrorParser;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -1,8 +1,5 @@
 package com.cabinet.cabinetmedical.ui.admin;
 
-import com.cabinet.cabinetmedical.session.SessionNavigator;
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +12,9 @@ import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.DashboardResponse;
+import com.cabinet.cabinetmedical.session.Session;
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.SessionNavigator;
 import com.cabinet.cabinetmedical.ui.auth.LoginActivity;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
 import com.google.android.material.button.MaterialButton;

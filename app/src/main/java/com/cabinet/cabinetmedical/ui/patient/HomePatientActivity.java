@@ -1,8 +1,5 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
-import com.cabinet.cabinetmedical.session.SessionNavigator;
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -10,6 +7,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cabinet.cabinetmedical.R;
+import com.cabinet.cabinetmedical.session.Session;
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.SessionNavigator;
 import com.cabinet.cabinetmedical.ui.auth.LoginActivity;
 import com.google.android.material.button.MaterialButton;
 

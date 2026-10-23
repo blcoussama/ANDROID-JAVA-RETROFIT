@@ -1,6 +1,5 @@
 package com.cabinet.cabinetmedical.ui.admin;
 
-import com.cabinet.cabinetmedical.utils.Validators;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.UpdateUserRequest;
 import com.cabinet.cabinetmedical.model.response.UserResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.cabinet.cabinetmedical.utils.Validators;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;

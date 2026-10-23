@@ -1,7 +1,5 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +15,8 @@ import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.TimeSlotResponse;
+import com.cabinet.cabinetmedical.session.Session;
+import com.cabinet.cabinetmedical.session.SessionManager;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

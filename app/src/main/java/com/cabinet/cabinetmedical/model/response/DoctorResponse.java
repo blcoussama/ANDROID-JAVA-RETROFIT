@@ -112,9 +112,7 @@ public class DoctorResponse {
         this.createdAt = createdAt;
     }
 
-    // ═══════════════════════════════════════════════════════════
     // MÉTHODES UTILITAIRES
-    // ═══════════════════════════════════════════════════════════
 
     /**
      * Retourne le nom complet du médecin avec titre "Dr."

@@ -1,8 +1,5 @@
 package com.cabinet.cabinetmedical.ui.auth;
 
-import com.cabinet.cabinetmedical.utils.Validators;
-import com.cabinet.cabinetmedical.session.SessionNavigator;
-import com.cabinet.cabinetmedical.session.SessionManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +13,10 @@ import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.RegisterRequest;
 import com.cabinet.cabinetmedical.model.response.LoginResponse;
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.SessionNavigator;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.cabinet.cabinetmedical.utils.Validators;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -133,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 setLoading(false);
-                // ✅ Utilise ErrorParser pour message user-friendly
+                // Utilise ErrorParser pour message user-friendly
                 String errorMessage = ErrorParser.getNetworkErrorMessage(t);
                 showError(errorMessage);
             }

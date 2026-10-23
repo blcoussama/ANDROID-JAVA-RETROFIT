@@ -1,0 +1,4 @@
+# Faux positifs gitleaks (règle generic-api-key) dans l'historique : exemples de documentation
+# tronqués « eyJhbGciOiJIUzI1NiJ9... » (en-tête JWT public {"alg":"HS256"}), pas des jetons réels.
+386f7f8ba9fa1d3a2a50e3dfa805d5ea489d37af:app/src/main/java/com/cabinet/cabinetmedical/model/response/LoginResponse.java:generic-api-key:24
+ae4612dc9c8044aca54098ee6b91701ccea3385f:app/src/main/java/com/cabinet/cabinetmedical/utils/JwtInterceptor.java:generic-api-key:42

@@ -1,12 +1,12 @@
 package com.cabinet.cabinetmedical;
 
-import com.cabinet.cabinetmedical.session.SessionManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cabinet.cabinetmedical.session.SessionManager;
 import com.cabinet.cabinetmedical.ui.auth.LoginActivity;
 
 /**

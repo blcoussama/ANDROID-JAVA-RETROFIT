@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cabinet.cabinetmedical.R;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.response.DoctorResponse;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.List;

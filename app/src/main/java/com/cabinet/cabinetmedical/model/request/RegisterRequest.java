@@ -38,9 +38,7 @@ public class RegisterRequest {
      */
     private String phone;
 
-    // ═══════════════════════════════════════════════════════
     // CONSTRUCTEURS
-    // ═══════════════════════════════════════════════════════
 
     /**
      * Constructeur vide (requis par Gson)
@@ -60,9 +58,7 @@ public class RegisterRequest {
         this.phone = phone;
     }
 
-    // ═══════════════════════════════════════════════════════
     // GETTERS & SETTERS
-    // ═══════════════════════════════════════════════════════
 
     public String getEmail() {
         return email;

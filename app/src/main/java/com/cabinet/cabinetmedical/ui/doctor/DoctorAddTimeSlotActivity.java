@@ -1,8 +1,5 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
-import java.util.Locale;
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
@@ -19,12 +16,15 @@ import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
 import com.cabinet.cabinetmedical.model.request.CreateTimeSlotRequest;
 import com.cabinet.cabinetmedical.model.response.TimeSlotResponse;
+import com.cabinet.cabinetmedical.session.Session;
+import com.cabinet.cabinetmedical.session.SessionManager;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;

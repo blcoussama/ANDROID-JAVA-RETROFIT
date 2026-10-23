@@ -22,9 +22,7 @@ public class LoginRequest {
      */
     private String password;
 
-    // ═══════════════════════════════════════════════════════
     // CONSTRUCTEURS
-    // ═══════════════════════════════════════════════════════
 
     /**
      * Constructeur vide (requis par Gson)
@@ -40,9 +38,7 @@ public class LoginRequest {
         this.password = password;
     }
 
-    // ═══════════════════════════════════════════════════════
     // GETTERS & SETTERS
-    // ═══════════════════════════════════════════════════════
 
     public String getEmail() {
         return email;

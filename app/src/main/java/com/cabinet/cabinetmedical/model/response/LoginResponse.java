@@ -65,9 +65,7 @@ public class LoginResponse {
      */
     private Long doctorId;
 
-    // ═══════════════════════════════════════════════════════
     // CONSTRUCTEURS
-    // ═══════════════════════════════════════════════════════
 
     /**
      * Constructeur vide (requis par Gson)
@@ -91,9 +89,7 @@ public class LoginResponse {
         this.doctorId = doctorId;
     }
 
-    // ═══════════════════════════════════════════════════════
     // GETTERS & SETTERS
-    // ═══════════════════════════════════════════════════════
 
     public String getToken() {
         return token;

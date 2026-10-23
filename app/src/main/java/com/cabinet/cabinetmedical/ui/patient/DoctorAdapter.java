@@ -19,7 +19,7 @@ import java.util.List;
  *
  * RESPONSABILITÉS:
  * - Afficher chaque médecin dans un item (nom + spécialité)
- * - Gérer le clic sur un médecin (TODO: voir créneaux)
+ * - Ouvrir les créneaux disponibles du médecin au clic
  * - Mettre à jour la liste dynamiquement
  */
 public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorViewHolder> {
