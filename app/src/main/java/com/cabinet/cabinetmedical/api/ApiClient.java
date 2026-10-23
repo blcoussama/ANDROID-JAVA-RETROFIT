@@ -2,7 +2,10 @@ package com.cabinet.cabinetmedical.api;
 
 import android.content.Context;
 
+import com.cabinet.cabinetmedical.BuildConfig;
 import com.cabinet.cabinetmedical.utils.JwtInterceptor;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -10,70 +13,58 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Configuration Retrofit pour les appels API REST
+ * Client Retrofit unique de l'application.
  *
- * Singleton pattern avec configuration automatique selon le build type:
- * - DEBUG: Backend local (http://IP_WSL:8080/)
- * - RELEASE: Backend production (Railway HTTPS)
- *
- * Configuration:
- * - JwtInterceptor: Ajoute automatiquement le token JWT aux requêtes
- * - LoggingInterceptor: Log les requêtes/réponses (debug uniquement)
- * - GsonConverter: Conversion automatique JSON ↔ Java
+ * <p>L'URL vient de {@code BuildConfig.BASE_URL} (définie par type de build dans
+ * app/build.gradle.kts). Le client ne retient que le contexte applicatif, jamais une
+ * Activity. Les journaux HTTP n'existent qu'en debug, sans corps (mots de passe, motifs
+ * de consultation) et avec l'en-tête Authorization masqué.</p>
  */
-public class ApiClient {
+public final class ApiClient {
 
-    /**
-     * URL de base de l'API backend
-     *
-     * DÉVELOPPEMENT LOCAL: Décommenter la ligne ci-dessous
-     * private static final String BASE_URL = "http://172.25.135.62:8080/";
-     *
-     * PRODUCTION RAILWAY: Décommenter la ligne ci-dessous (ACTIVE)
-     */
-    private static final String BASE_URL = "https://android-mobile-java-springboot-app-backend-production.up.railway.app/";
+    private static volatile Retrofit retrofit;
 
-    private static Retrofit retrofit = null;
+    private ApiClient() {
+    }
 
-    /**
-     * Obtenir l'instance Retrofit (singleton)
-     *
-     * @param context Context Android pour JwtInterceptor
-     * @return Instance Retrofit configurée
-     */
     public static Retrofit getClient(Context context) {
-        if (retrofit != null) {
-            return retrofit;
+        if (retrofit == null) {
+            synchronized (ApiClient.class) {
+                if (retrofit == null) {
+                    retrofit = new Retrofit.Builder()
+                            .baseUrl(BuildConfig.BASE_URL)
+                            .client(buildHttpClient(context.getApplicationContext()))
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                }
+            }
         }
-
-        // Log URL utilisée
-        android.util.Log.i("ApiClient", "🔗 BASE_URL: " + BASE_URL);
-
-        // Logging interceptor (debug)
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Client OkHttp avec intercepteurs
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new JwtInterceptor(context))
-                .addInterceptor(loggingInterceptor)
-                .build();
-
-        // Instance Retrofit
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
         return retrofit;
     }
 
-    /**
-     * Réinitialiser l'instance Retrofit
-     * Utile pour les tests ou changement de configuration
-     */
-    public static void reset() {
-        retrofit = null;
+    public static ApiService getService(Context context) {
+        return getClient(context).create(ApiService.class);
+    }
+
+    private static OkHttpClient buildHttpClient(Context appContext) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(new JwtInterceptor(appContext));
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(debugLogging());
+        }
+        return builder.build();
+    }
+
+    /** Journal HTTP de debug : méthode, URL, code et en-têtes, jeton masqué, aucun corps. */
+    static HttpLoggingInterceptor debugLogging() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        logging.redactHeader("Authorization");
+        logging.redactHeader("Cookie");
+        logging.redactHeader("Set-Cookie");
+        return logging;
     }
 }

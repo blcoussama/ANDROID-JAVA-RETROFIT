@@ -1,21 +1,12 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Règles R8 pour la build release (minification activée).
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Modèles sérialisés par Gson par réflexion : noms de champs à conserver (JSON de l'API).
+-keep class com.cabinet.cabinetmedical.model.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Retrofit lit les types génériques et les annotations de l'interface ApiService.
+-keepattributes Signature, InnerClasses, EnclosingMethod, *Annotation*
+-keep,allowobfuscation interface com.cabinet.cabinetmedical.api.ApiService
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Garder les numéros de ligne dans les traces, sans exposer les noms de fichiers source.
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
