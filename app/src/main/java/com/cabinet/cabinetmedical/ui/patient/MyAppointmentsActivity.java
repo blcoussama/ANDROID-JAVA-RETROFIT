@@ -1,7 +1,8 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -65,8 +66,8 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         });
 
         // Récupérer patientId depuis SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        patientId = prefs.getLong("patient_id", -1);
+        Session session = SessionManager.get(this).getSession();
+        patientId = session != null && session.getPatientId() != null ? session.getPatientId() : -1L;
 
         if (patientId == -1) {
             // Pas de patient_id → Retour
@@ -75,7 +76,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         }
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         recyclerView = findViewById(R.id.recycler_view);

@@ -1,7 +1,8 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.Session;
 import android.app.TimePickerDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -67,8 +68,8 @@ public class DoctorAddTimeSlotActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // Récupérer doctorId depuis SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        doctorId = prefs.getLong("doctor_id", -1);
+        Session session = SessionManager.get(this).getSession();
+        doctorId = session != null && session.getDoctorId() != null ? session.getDoctorId() : -1L;
 
         if (doctorId == -1) {
             finish();
@@ -76,7 +77,7 @@ public class DoctorAddTimeSlotActivity extends AppCompatActivity {
         }
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         daySpinner = findViewById(R.id.spinner_day);

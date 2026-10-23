@@ -69,7 +69,7 @@ public class AdminPatientDetailsActivity extends AppCompatActivity {
         });
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Récupérer userId depuis l'Intent
         userId = getIntent().getLongExtra("userId", -1);

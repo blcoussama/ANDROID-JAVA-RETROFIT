@@ -61,7 +61,7 @@ public class AdminEditDoctorActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Récupérer les données depuis Intent
         userId = getIntent().getLongExtra("userId", -1);

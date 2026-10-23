@@ -74,7 +74,7 @@ public class AvailableTimeSlotsActivity extends AppCompatActivity {
         }
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         doctorNameText = findViewById(R.id.doctor_name_text);

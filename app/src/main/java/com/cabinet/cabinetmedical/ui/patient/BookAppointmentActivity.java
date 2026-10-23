@@ -1,7 +1,8 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -64,8 +65,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // Récupérer patientId depuis SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        patientId = prefs.getLong("patient_id", -1);
+        Session session = SessionManager.get(this).getSession();
+        patientId = session != null && session.getPatientId() != null ? session.getPatientId() : -1L;
 
         // Récupérer les infos depuis l'Intent
         doctorId = getIntent().getLongExtra("doctorId", -1);
@@ -79,7 +80,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
         }
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         doctorNameText = findViewById(R.id.doctor_name_text);

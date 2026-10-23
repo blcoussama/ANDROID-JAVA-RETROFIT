@@ -1,7 +1,9 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
+import com.cabinet.cabinetmedical.session.SessionNavigator;
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -65,9 +67,9 @@ public class HomePatientActivity extends AppCompatActivity {
      * et afficher le message de bienvenue personnalisé
      */
     private void loadPatientInfo() {
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        String firstName = prefs.getString("user_firstName", "Patient");
-        String lastName = prefs.getString("user_lastName", "");
+        Session session = SessionManager.get(this).getSession();
+        String firstName = session != null ? session.getFirstName() : "Patient";
+        String lastName = session != null ? session.getLastName() : "";
 
         // Afficher message de bienvenue
         String welcomeText = "Bienvenue " + firstName + " " + lastName + " !";
@@ -77,15 +79,8 @@ public class HomePatientActivity extends AppCompatActivity {
     /**
      * Déconnexion : Supprimer le token JWT et retourner au Login
      */
+    /** Déconnexion : jetons révoqués côté API, session locale effacée, retour à la connexion. */
     private void logout() {
-        // Supprimer toutes les données d'authentification
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        prefs.edit().clear().apply();
-
-        // Rediriger vers Login
-        Intent intent = new Intent(HomePatientActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        SessionNavigator.logout(this);
     }
 }

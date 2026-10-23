@@ -1,7 +1,8 @@
 package com.cabinet.cabinetmedical.ui.auth;
 
+import com.cabinet.cabinetmedical.session.SessionNavigator;
+import com.cabinet.cabinetmedical.session.SessionManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -9,10 +10,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cabinet.cabinetmedical.MainActivity;
-import com.cabinet.cabinetmedical.ui.admin.DashboardAdminActivity;
-import com.cabinet.cabinetmedical.ui.doctor.HomeDoctorActivity;
-import com.cabinet.cabinetmedical.ui.patient.HomePatientActivity;
 import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
@@ -27,6 +24,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+
+    /** Extra posé quand l'API a refusé le jeton (expiré ou révoqué). */
+    public static final String EXTRA_SESSION_EXPIRED = "session_expired";
 
     private TextInputEditText emailInput;
     private TextInputEditText passwordInput;
@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Lier les vues
         emailInput = findViewById(R.id.email_input);
@@ -55,6 +55,10 @@ public class LoginActivity extends AppCompatActivity {
 
         // Click listeners
         loginButton.setOnClickListener(v -> attemptLogin());
+        if (getIntent().getBooleanExtra(EXTRA_SESSION_EXPIRED, false)) {
+            showError(getString(R.string.session_expired));
+        }
+
         registerLink.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
@@ -117,62 +121,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /** Session (jeton + profil) enregistrée chiffrée, jamais en clair. */
     private void saveUserData(LoginResponse response) {
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString("jwt_token", response.getToken());
-        editor.putLong("user_id", response.getUserId());
-        editor.putString("user_email", response.getEmail());
-        editor.putString("user_firstName", response.getFirstName());
-        editor.putString("user_lastName", response.getLastName());
-        editor.putString("user_role", response.getRole());
-
-        if (response.getPatientId() != null) {
-            editor.putLong("patient_id", response.getPatientId());
-        }
-        if (response.getDoctorId() != null) {
-            editor.putLong("doctor_id", response.getDoctorId());
-        }
-
-        editor.apply();
+        SessionManager.get(this).save(response);
     }
 
-    /**
-     * Rediriger vers l'écran approprié selon le rôle de l'utilisateur
-     *
-     * REDIRECTION:
-     * - PATIENT → HomePatientActivity
-     * - DOCTOR → HomeDoctorActivity
-     * - ADMIN → DashboardAdminActivity
-     *
-     * @param role Rôle de l'utilisateur (PATIENT, DOCTOR, ADMIN)
-     */
     private void navigateToHome(String role) {
-        Intent intent;
-
-        switch (role) {
-            case "PATIENT":
-                intent = new Intent(LoginActivity.this, HomePatientActivity.class);
-                break;
-
-            case "DOCTOR":
-                intent = new Intent(LoginActivity.this, HomeDoctorActivity.class);
-                break;
-
-            case "ADMIN":
-                intent = new Intent(LoginActivity.this, DashboardAdminActivity.class);
-                break;
-
-            default:
-                // Fallback (ne devrait jamais arriver)
-                // MainActivity affiche un écran d'erreur "Rôle inconnu"
-                intent = new Intent(LoginActivity.this, MainActivity.class);
-                break;
-        }
-
-        startActivity(intent);
-        finish(); // Fermer LoginActivity
+        startActivity(SessionNavigator.homeIntent(this, role));
+        finish();
     }
 
     private void setLoading(boolean loading) {

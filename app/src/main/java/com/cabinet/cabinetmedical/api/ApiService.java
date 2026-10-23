@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -55,12 +56,9 @@ public interface ApiService {
     @POST("api/auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
 
-    /**
-     * Vérifier si un email existe
-     * GET /api/auth/email-exists?email={email}
-     */
-    @GET("api/auth/email-exists")
-    Call<Map<String, Object>> emailExists(@Query("email") String email);
+        /** Révoque côté serveur tous les jetons de l'utilisateur ; l'en-tête est passé explicitement. */
+    @POST("api/auth/logout")
+    Call<Void> logout(@Header("Authorization") String bearerToken);
 
     /**
      * Valider le token JWT

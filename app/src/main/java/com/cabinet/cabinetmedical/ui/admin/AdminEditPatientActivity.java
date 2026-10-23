@@ -60,7 +60,7 @@ public class AdminEditPatientActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Récupérer les données depuis l'Intent
         userId = getIntent().getLongExtra("userId", -1);

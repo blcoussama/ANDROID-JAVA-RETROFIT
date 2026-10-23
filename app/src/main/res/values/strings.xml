@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CabinetMedical</string>
+    <string name="session_expired">Votre session a expiré, reconnectez-vous.</string>
 </resources>

@@ -2,7 +2,6 @@ package com.cabinet.cabinetmedical.ui.doctor;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -78,7 +77,7 @@ public class DoctorEditTimeSlotActivity extends AppCompatActivity {
         }
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         daySpinner = findViewById(R.id.spinner_day);

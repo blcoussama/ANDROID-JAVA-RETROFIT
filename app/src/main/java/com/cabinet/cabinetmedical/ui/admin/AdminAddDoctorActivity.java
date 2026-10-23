@@ -65,7 +65,7 @@ public class AdminAddDoctorActivity extends AppCompatActivity {
         });
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         emailInput = findViewById(R.id.input_email);

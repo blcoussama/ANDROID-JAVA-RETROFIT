@@ -1,7 +1,7 @@
 package com.cabinet.cabinetmedical;
 
+import com.cabinet.cabinetmedical.session.SessionManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
      * Supprimer toutes les données utilisateur sauvegardées
      */
     private void clearUserData() {
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        prefs.edit().clear().apply();
+        SessionManager.get(this).clear();
     }
 }

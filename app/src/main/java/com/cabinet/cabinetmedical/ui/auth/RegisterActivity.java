@@ -1,7 +1,8 @@
 package com.cabinet.cabinetmedical.ui.auth;
 
+import com.cabinet.cabinetmedical.session.SessionNavigator;
+import com.cabinet.cabinetmedical.session.SessionManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cabinet.cabinetmedical.MainActivity;
 import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Lier les vues
         emailInput = findViewById(R.id.email_input);
@@ -139,35 +139,15 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /** Session (jeton + profil) enregistrée chiffrée, jamais en clair. */
     private void saveUserData(LoginResponse response) {
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString("jwt_token", response.getToken());
-        editor.putLong("user_id", response.getUserId());
-        editor.putString("user_email", response.getEmail());
-        editor.putString("user_firstName", response.getFirstName());
-        editor.putString("user_lastName", response.getLastName());
-        editor.putString("user_role", response.getRole());
-
-        // Register crée toujours un PATIENT, donc patientId est toujours présent
-        if (response.getPatientId() != null) {
-            editor.putLong("patient_id", response.getPatientId());
-        }
-
-        editor.apply();
+        SessionManager.get(this).save(response);
     }
 
-    /**
-     * Rediriger vers HomePatientActivity
-     *
-     * NOTE: L'endpoint /register crée UNIQUEMENT des comptes PATIENT
-     * Les comptes DOCTOR et ADMIN sont créés par l'administrateur
-     */
+    /** L'inscription publique crée toujours un compte PATIENT. */
     private void navigateToHome() {
-        Intent intent = new Intent(RegisterActivity.this, com.cabinet.cabinetmedical.ui.patient.HomePatientActivity.class);
-        startActivity(intent);
-        finish(); // Fermer RegisterActivity
+        startActivity(SessionNavigator.homeIntent(this, "PATIENT"));
+        finish();
     }
 
     private void setLoading(boolean loading) {

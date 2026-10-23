@@ -64,7 +64,7 @@ public class AdminPatientsListActivity extends AppCompatActivity {
         });
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         recyclerView = findViewById(R.id.recycler_view);

@@ -1,7 +1,9 @@
 package com.cabinet.cabinetmedical.ui.admin;
 
+import com.cabinet.cabinetmedical.session.SessionNavigator;
+import com.cabinet.cabinetmedical.session.SessionManager;
+import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -65,7 +67,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard_admin);
 
         // Initialiser Retrofit
-        apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService = ApiClient.getService(this);
 
         // Initialiser les vues
         welcomeMessage = findViewById(R.id.welcome_message);
@@ -114,25 +116,18 @@ public class DashboardAdminActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(v -> logout());
     }
 
+    /** Déconnexion : jetons révoqués côté API, session locale effacée, retour à la connexion. */
     private void logout() {
-        // Supprimer toutes les données d'authentification
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        prefs.edit().clear().apply();
-
-        // Rediriger vers Login
-        Intent intent = new Intent(DashboardAdminActivity.this, com.cabinet.cabinetmedical.ui.auth.LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        SessionNavigator.logout(this);
     }
 
     /**
      * Charger les informations de l'admin
      */
     private void loadAdminInfo() {
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        String firstName = prefs.getString("user_firstName", "Admin");
-        String lastName = prefs.getString("user_lastName", "");
+        Session session = SessionManager.get(this).getSession();
+        String firstName = session != null ? session.getFirstName() : "Admin";
+        String lastName = session != null ? session.getLastName() : "";
 
         String name = firstName + " " + lastName;
         adminName.setText(name);
