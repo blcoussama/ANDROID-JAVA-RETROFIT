@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
+import java.util.Locale;
 import com.cabinet.cabinetmedical.session.SessionManager;
 import com.cabinet.cabinetmedical.session.Session;
 import android.app.TimePickerDialog;
@@ -122,8 +123,8 @@ public class DoctorAddTimeSlotActivity extends AppCompatActivity {
         // Par défaut 09:00
         TimePickerDialog picker = new TimePickerDialog(this,
                 (view, hourOfDay, minute) -> {
-                    selectedStartTime = String.format("%02d:%02d:00", hourOfDay, minute);
-                    startTimeInput.setText(String.format("%02d:%02d", hourOfDay, minute));
+                    selectedStartTime = String.format(Locale.ROOT, "%02d:%02d:00", hourOfDay, minute);
+                    startTimeInput.setText(String.format(Locale.ROOT, "%02d:%02d", hourOfDay, minute));
                     validateTimes();
                 }, 9, 0, true);
         picker.show();
@@ -136,8 +137,8 @@ public class DoctorAddTimeSlotActivity extends AppCompatActivity {
         // Par défaut 17:00
         TimePickerDialog picker = new TimePickerDialog(this,
                 (view, hourOfDay, minute) -> {
-                    selectedEndTime = String.format("%02d:%02d:00", hourOfDay, minute);
-                    endTimeInput.setText(String.format("%02d:%02d", hourOfDay, minute));
+                    selectedEndTime = String.format(Locale.ROOT, "%02d:%02d:00", hourOfDay, minute);
+                    endTimeInput.setText(String.format(Locale.ROOT, "%02d:%02d", hourOfDay, minute));
                     validateTimes();
                 }, 17, 0, true);
         picker.show();
@@ -214,7 +215,7 @@ public class DoctorAddTimeSlotActivity extends AppCompatActivity {
                     // Erreur de chevauchement
                     showError("Ce créneau chevauche un créneau existant");
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

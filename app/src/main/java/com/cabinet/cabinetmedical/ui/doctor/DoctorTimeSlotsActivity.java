@@ -153,7 +153,7 @@ public class DoctorTimeSlotsActivity extends AppCompatActivity {
                         adapter.updateTimeSlots(timeSlots);
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -214,7 +214,7 @@ public class DoctorTimeSlotsActivity extends AppCompatActivity {
                     // Recharger la liste
                     loadTimeSlots();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

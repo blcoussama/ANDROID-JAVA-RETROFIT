@@ -113,7 +113,7 @@ public class AdminPatientDetailsActivity extends AppCompatActivity {
                     currentUser = response.body();
                     displayUserDetails(currentUser);
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -207,7 +207,7 @@ public class AdminPatientDetailsActivity extends AppCompatActivity {
                             "Patient supprimé avec succès", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     Toast.makeText(AdminPatientDetailsActivity.this, error, Toast.LENGTH_LONG).show();
                 }
             }

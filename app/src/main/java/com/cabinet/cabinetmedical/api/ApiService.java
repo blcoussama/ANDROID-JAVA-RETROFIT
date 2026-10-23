@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.api;
 
+import com.cabinet.cabinetmedical.model.request.CancelAppointmentRequest;
 import com.cabinet.cabinetmedical.model.request.CreateAppointmentRequest;
 import com.cabinet.cabinetmedical.model.request.CreateTimeSlotRequest;
 import com.cabinet.cabinetmedical.model.request.CreateUserRequest;
@@ -22,212 +23,101 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Interface Retrofit définissant tous les endpoints API du backend
- *
- * Notes:
- * - JWT ajouté automatiquement par JwtInterceptor
- * - Conversion JSON automatique via Gson
- * - Utiliser avec ApiClient.getClient(context).create(ApiService.class)
+ * Routes de l'API SPRING-BOOT-JWT-REST-API utilisées par l'application.
+ * L'identité de l'utilisateur vient toujours du jeton : aucune route ne reçoit
+ * l'identifiant du patient ou du médecin connecté pour décider d'un accès.
  */
 public interface ApiService {
 
-    // ═══════════════════════════════════════════════════════
-    // AUTHENTIFICATION
-    // ═══════════════════════════════════════════════════════
+    // --- Authentification ---
 
-    /**
-     * Inscription d'un nouveau patient
-     * POST /api/auth/register
-     */
     @POST("api/auth/register")
     Call<LoginResponse> register(@Body RegisterRequest request);
 
-    /**
-     * Connexion utilisateur (tous rôles)
-     * POST /api/auth/login
-     */
     @POST("api/auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
 
-        /** Révoque côté serveur tous les jetons de l'utilisateur ; l'en-tête est passé explicitement. */
-    @POST("api/auth/logout")
-    Call<Void> logout(@Header("Authorization") String bearerToken);
-
-    /**
-     * Valider le token JWT
-     * GET /api/auth/validate
-     */
+    /** 200 si le jeton est valide, 401 sinon. */
     @GET("api/auth/validate")
     Call<Map<String, Object>> validateToken();
 
-    // ═══════════════════════════════════════════════════════
-    // DOCTORS (MÉDECINS)
-    // ═══════════════════════════════════════════════════════
+    /** Révoque côté serveur tous les jetons de l'utilisateur ; l'en-tête est passé explicitement. */
+    @POST("api/auth/logout")
+    Call<Void> logout(@Header("Authorization") String bearerToken);
 
-    /**
-     * Récupérer tous les médecins
-     * GET /api/doctors
-     */
+    // --- Médecins (annuaire public) ---
+
     @GET("api/doctors")
     Call<List<DoctorResponse>> getAllDoctors();
 
-    // ═══════════════════════════════════════════════════════
-    // TIMESLOTS (CRÉNEAUX HORAIRES)
-    // ═══════════════════════════════════════════════════════
+    // --- Créneaux ---
 
-    /**
-     * Récupérer les heures disponibles pour un médecin à une date
-     * GET /api/timeslots/available?doctorId={id}&date={date}
-     *
-     * @param doctorId ID du médecin
-     * @param date Format "YYYY-MM-DD"
-     * @return Liste des heures disponibles (ex: ["09:00:00", "09:30:00"])
-     */
+    /** Heures encore réservables ("09:00:00", ...) pour un médecin à une date (yyyy-MM-dd). */
     @GET("api/timeslots/available")
     Call<List<String>> getAvailableTimeSlots(@Query("doctorId") Long doctorId, @Query("date") String date);
 
-    /**
-     * Obtenir tous les créneaux d'un médecin
-     * GET /api/timeslots/doctor/{doctorId}
-     */
     @GET("api/timeslots/doctor/{doctorId}")
     Call<List<TimeSlotResponse>> getDoctorTimeSlots(@Path("doctorId") Long doctorId);
 
-    /**
-     * Créer un créneau horaire
-     * POST /api/timeslots
-     */
+    /** Médecin : créneau toujours créé à son nom (doctorId ignoré par l'API). */
     @POST("api/timeslots")
     Call<TimeSlotResponse> createTimeSlot(@Body CreateTimeSlotRequest request);
 
-    /**
-     * Modifier un créneau horaire
-     * PUT /api/timeslots/{id}
-     */
     @PUT("api/timeslots/{id}")
     Call<TimeSlotResponse> updateTimeSlot(@Path("id") Long timeSlotId, @Body UpdateTimeSlotRequest request);
 
-    /**
-     * Supprimer un créneau horaire
-     * DELETE /api/timeslots/{id}
-     */
     @DELETE("api/timeslots/{id}")
     Call<Void> deleteTimeSlot(@Path("id") Long timeSlotId);
 
-    // ═══════════════════════════════════════════════════════
-    // APPOINTMENTS (RENDEZ-VOUS)
-    // ═══════════════════════════════════════════════════════
+    // --- Rendez-vous ---
 
-    /**
-     * Créer un rendez-vous
-     * POST /api/appointments?patientId={id}
-     *
-     * @param patientId ID du patient qui prend RDV
-     * @param request Détails du rendez-vous (doctorId, dateTime, reason)
-     */
+    /** Réservation par le patient connecté. */
     @POST("api/appointments")
-    Call<AppointmentResponse> createAppointment(@Query("patientId") Long patientId, @Body CreateAppointmentRequest request);
+    Call<AppointmentResponse> createAppointment(@Body CreateAppointmentRequest request);
 
-    /**
-     * Obtenir tous les rendez-vous (Admin uniquement)
-     * GET /api/appointments
-     */
+    /** Rendez-vous du patient ou du médecin connecté. */
+    @GET("api/appointments/me")
+    Call<List<AppointmentResponse>> getMyAppointments();
+
+    /** Tous les rendez-vous (administrateur). */
     @GET("api/appointments")
     Call<List<AppointmentResponse>> getAllAppointments();
 
-    /**
-     * Obtenir les rendez-vous d'un patient
-     * GET /api/appointments/patient/{patientId}
-     */
-    @GET("api/appointments/patient/{patientId}")
-    Call<List<AppointmentResponse>> getPatientAppointments(@Path("patientId") Long patientId);
-
-    /**
-     * Obtenir les rendez-vous d'un médecin
-     * GET /api/appointments/doctor/{doctorId}
-     */
-    @GET("api/appointments/doctor/{doctorId}")
-    Call<List<AppointmentResponse>> getDoctorAppointments(@Path("doctorId") Long doctorId);
-
-    /**
-     * Confirmer un rendez-vous
-     * POST /api/appointments/{id}/confirm
-     */
     @POST("api/appointments/{id}/confirm")
     Call<AppointmentResponse> confirmAppointment(@Path("id") Long appointmentId);
 
-    /**
-     * Annuler un rendez-vous
-     * DELETE /api/appointments/{id}?cancelledBy={who}
-     *
-     * @param appointmentId ID du rendez-vous
-     * @param cancelledBy Qui annule (PATIENT/DOCTOR/ADMIN)
-     * @param request Body avec raison (peut être null)
-     */
-    @HTTP(method = "DELETE", path = "api/appointments/{id}", hasBody = true)
-    Call<Void> cancelAppointment(@Path("id") Long appointmentId, @Query("cancelledBy") String cancelledBy, @Body Object request);
+    /** Annulation ; l'API déduit qui annule (patient, médecin, admin) du jeton. */
+    @POST("api/appointments/{id}/cancel")
+    Call<AppointmentResponse> cancelAppointment(@Path("id") Long appointmentId,
+            @Body CancelAppointmentRequest request);
 
-    // ═══════════════════════════════════════════════════════
-    // ADMIN ENDPOINTS
-    // ═══════════════════════════════════════════════════════
+    // --- Administration ---
 
-    /**
-     * Obtenir le dashboard admin avec statistiques
-     * GET /api/admin/dashboard
-     */
     @GET("api/admin/dashboard")
     Call<DashboardResponse> getDashboard();
 
-    /**
-     * Obtenir tous les utilisateurs
-     * GET /api/users
-     */
+    /** Comptes filtrés par rôle : PATIENT, DOCTOR ou ADMIN. */
     @GET("api/users")
-    Call<List<UserResponse>> getAllUsers();
+    Call<List<UserResponse>> getUsers(@Query("role") String role);
 
-    /**
-     * Obtenir un utilisateur par ID
-     * GET /api/users/{id}
-     */
     @GET("api/users/{id}")
     Call<UserResponse> getUserById(@Path("id") Long userId);
 
-    /**
-     * Créer un patient
-     * POST /api/users/patient
-     */
     @POST("api/users/patient")
     Call<UserResponse> createPatient(@Body CreateUserRequest request);
 
-    /**
-     * Créer un médecin
-     * POST /api/users/doctor
-     */
     @POST("api/users/doctor")
     Call<UserResponse> createDoctor(@Body CreateUserRequest request);
 
-    /**
-     * Modifier un utilisateur
-     * PUT /api/users/{id}
-     *
-     * Note: Admin ne peut pas modifier d'autres admins
-     */
     @PUT("api/users/{id}")
     Call<UserResponse> updateUser(@Path("id") Long userId, @Body UpdateUserRequest request);
 
-    /**
-     * Supprimer un utilisateur
-     * DELETE /api/users/{id}
-     *
-     * Note: Admin ne peut pas supprimer d'autres admins
-     */
     @DELETE("api/users/{id}")
     Call<Void> deleteUser(@Path("id") Long userId);
 }

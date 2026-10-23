@@ -1,5 +1,9 @@
 package com.cabinet.cabinetmedical.model.response;
 
+import com.cabinet.cabinetmedical.utils.DateTimes;
+
+import java.util.Date;
+
 /**
  * AppointmentResponse - Informations complètes d'un rendez-vous
  *
@@ -153,44 +157,17 @@ public class AppointmentResponse {
         this.updatedAt = updatedAt;
     }
 
-    // Helper methods
+    // --- Aides à l'affichage ---
 
-    /**
-     * Formater date/heure pour affichage
-     * Input: "2026-02-03T14:00:00"
-     * Output: "03/02/2026 à 14:00"
-     */
+    /** "03/02/2026 à 14:00". */
     public String getFormattedDateTime() {
-        if (dateTime == null) return "";
-        try {
-            // Split date et time
-            String[] parts = dateTime.split("T");
-            String datePart = parts[0];  // "2026-02-03"
-            String timePart = parts[1];  // "14:00:00"
-
-            // Format date
-            String[] dateParts = datePart.split("-");
-            String day = dateParts[2];
-            String month = dateParts[1];
-            String year = dateParts[0];
-
-            // Format time (remove seconds)
-            String timeShort = timePart.length() > 5 ? timePart.substring(0, 5) : timePart;
-
-            return String.format("%s/%s/%s à %s", day, month, year, timeShort);
-        } catch (Exception e) {
-            return dateTime;
-        }
+        return DateTimes.format(dateTime);
     }
 
-    /**
-     * Status avec couleur
-     * PENDING → "En attente"
-     * CONFIRMED → "Confirmé"
-     * CANCELLED → "Annulé"
-     */
     public String getStatusLabel() {
-        if (status == null) return "En attente";
+        if (status == null) {
+            return "En attente";
+        }
         switch (status) {
             case "PENDING":
                 return "En attente";
@@ -203,13 +180,41 @@ public class AppointmentResponse {
         }
     }
 
-    /**
-     * Spécialité du médecin ou "Médecin généraliste"
-     */
     public String getSpecialtyOrDefault() {
-        if (doctorSpecialty == null || doctorSpecialty.isEmpty()) {
-            return "Médecin généraliste";
+        return doctorSpecialty == null || doctorSpecialty.isEmpty() ? "Médecin généraliste" : doctorSpecialty;
+    }
+
+    public boolean isCancelled() {
+        return "CANCELLED".equals(status);
+    }
+
+    /** Annulable : pas encore annulé et pas encore passé (l'API applique la même règle). */
+    public boolean canBeCancelled(Date now) {
+        return !isCancelled() && DateTimes.isAfter(dateTime, now);
+    }
+
+    /** Confirmable : en attente et pas encore passé. */
+    public boolean canBeConfirmed(Date now) {
+        return "PENDING".equals(status) && DateTimes.isAfter(dateTime, now);
+    }
+
+    /** "Annulé par le patient : raison", ou null si le rendez-vous n'est pas annulé. */
+    public String getCancellationLabel() {
+        if (!isCancelled()) {
+            return null;
         }
-        return doctorSpecialty;
+        String by;
+        if ("PATIENT".equals(cancelledBy)) {
+            by = "le patient";
+        } else if ("DOCTOR".equals(cancelledBy)) {
+            by = "le médecin";
+        } else if ("ADMIN".equals(cancelledBy)) {
+            by = "le cabinet";
+        } else {
+            by = null;
+        }
+        String label = by != null ? "Annulé par " + by : "Annulé";
+        return cancellationReason != null && !cancellationReason.isEmpty()
+                ? label + " : " + cancellationReason : label;
     }
 }

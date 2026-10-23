@@ -5,7 +5,6 @@
 
     <!-- Primary colors -->
     <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
 
     <!-- Text colors -->
     <color name="text_primary">#212121</color>

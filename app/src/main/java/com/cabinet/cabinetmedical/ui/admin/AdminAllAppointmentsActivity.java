@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
+import com.cabinet.cabinetmedical.model.request.CancelAppointmentRequest;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
+import com.cabinet.cabinetmedical.ui.common.CancelReasonDialog;
 import com.cabinet.cabinetmedical.ui.doctor.DoctorAppointmentAdapter;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,7 +81,10 @@ public class AdminAllAppointmentsActivity extends AppCompatActivity {
 
             @Override
             public void onCancel(AppointmentResponse appointment) {
-                cancelAppointment(appointment.getId());
+                CancelReasonDialog.show(AdminAllAppointmentsActivity.this,
+                        appointment.getPatientName() + " / " + appointment.getDoctorName() + "\n"
+                                + appointment.getFormattedDateTime(),
+                        reason -> cancelAppointment(appointment.getId(), reason));
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -113,7 +116,7 @@ public class AdminAllAppointmentsActivity extends AppCompatActivity {
                         adapter.updateAppointments(appointments);
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -134,7 +137,7 @@ public class AdminAllAppointmentsActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     loadAllAppointments();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -147,26 +150,24 @@ public class AdminAllAppointmentsActivity extends AppCompatActivity {
         });
     }
 
-    private void cancelAppointment(Long appointmentId) {
-        Map<String, String> emptyBody = new HashMap<>();
+    /** Annulation par l'administrateur (tracée « ADMIN » par l'API). */
+    private void cancelAppointment(Long appointmentId, String reason) {
+        apiService.cancelAppointment(appointmentId, new CancelAppointmentRequest(reason))
+                .enqueue(new Callback<AppointmentResponse>() {
+                    @Override
+                    public void onResponse(Call<AppointmentResponse> call, Response<AppointmentResponse> response) {
+                        if (response.isSuccessful()) {
+                            loadAllAppointments();
+                        } else {
+                            showError(ErrorParser.parse(response));
+                        }
+                    }
 
-        apiService.cancelAppointment(appointmentId, "ADMIN", emptyBody).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    loadAllAppointments();
-                } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
-                    showError(error);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                String error = ErrorParser.getNetworkErrorMessage(t);
-                showError(error);
-            }
-        });
+                    @Override
+                    public void onFailure(Call<AppointmentResponse> call, Throwable t) {
+                        showError(ErrorParser.getNetworkErrorMessage(t));
+                    }
+                });
     }
 
     private void showLoading(boolean loading) {

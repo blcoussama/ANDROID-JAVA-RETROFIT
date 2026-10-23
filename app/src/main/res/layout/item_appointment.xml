@@ -122,5 +122,27 @@
                 android:textColor="@color/text_primary" />
         </LinearLayout>
 
+        <!-- Annulation : qui a annulé et pourquoi -->
+        <TextView
+            android:id="@+id/cancellation_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/status_cancelled"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- Annulation par le patient (rendez-vous à venir uniquement) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancel_button"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:text="Annuler le rendez-vous"
+            android:textColor="@color/status_cancelled"
+            android:visibility="gone"
+            app:strokeColor="@color/status_cancelled" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -149,7 +149,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
                     DashboardResponse dashboard = response.body();
                     displayStatistics(dashboard);
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.auth;
 
+import com.cabinet.cabinetmedical.utils.Validators;
 import com.cabinet.cabinetmedical.session.SessionNavigator;
 import com.cabinet.cabinetmedical.session.SessionManager;
 import android.content.Intent;
@@ -78,8 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (password.isEmpty() || password.length() < 6) {
-            passwordInput.setError("Mot de passe minimum 6 caractères");
+        if (!Validators.isValidPassword(password)) {
+            passwordInput.setError(Validators.PASSWORD_RULE);
             passwordInput.requestFocus();
             return;
         }
@@ -124,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // Rediriger vers HomePatientActivity
                     navigateToHome();
                 } else {
-                    String errorMessage = ErrorParser.parseErrorMessage(response.errorBody());
+                    String errorMessage = ErrorParser.parse(response);
                     showError(errorMessage);
                 }
             }

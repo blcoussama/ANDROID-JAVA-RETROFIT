@@ -20,7 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,16 +95,13 @@ public class AdminPatientsListActivity extends AppCompatActivity {
         hideError();
         hideEmpty();
 
-        apiService.getAllUsers().enqueue(new Callback<List<UserResponse>>() {
+        apiService.getUsers("PATIENT").enqueue(new Callback<List<UserResponse>>() {
             @Override
             public void onResponse(Call<List<UserResponse>> call, Response<List<UserResponse>> response) {
                 showLoading(false);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    // Filtrer seulement les patients
-                    List<UserResponse> patients = response.body().stream()
-                            .filter(user -> "PATIENT".equals(user.getRole()))
-                            .collect(Collectors.toList());
+                    List<UserResponse> patients = response.body();
 
                     if (patients.isEmpty()) {
                         showEmpty();
@@ -113,7 +109,7 @@ public class AdminPatientsListActivity extends AppCompatActivity {
                         adapter.updatePatients(patients);
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

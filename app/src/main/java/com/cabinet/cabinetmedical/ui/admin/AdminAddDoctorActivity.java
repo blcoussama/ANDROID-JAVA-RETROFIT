@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.admin;
 
+import com.cabinet.cabinetmedical.utils.Validators;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,7 @@ import retrofit2.Response;
  * Accessible depuis AdminDoctorsListActivity (bouton FAB).
  *
  * API: POST /api/users/doctor
- * VALIDATION: Email unique, password 6+ caractères, spécialité obligatoire
+ * VALIDATION: Email unique, mot de passe de 8 caractères minimum (lettre + chiffre), spécialité obligatoire
  */
 public class AdminAddDoctorActivity extends AppCompatActivity {
 
@@ -102,8 +103,8 @@ public class AdminAddDoctorActivity extends AppCompatActivity {
             return;
         }
 
-        if (password.isEmpty() || password.length() < 6) {
-            showError("Le mot de passe doit contenir au moins 6 caractères");
+        if (!Validators.isValidPassword(password)) {
+            showError(Validators.PASSWORD_RULE);
             return;
         }
 
@@ -157,7 +158,7 @@ public class AdminAddDoctorActivity extends AppCompatActivity {
                             "Médecin créé avec succès", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

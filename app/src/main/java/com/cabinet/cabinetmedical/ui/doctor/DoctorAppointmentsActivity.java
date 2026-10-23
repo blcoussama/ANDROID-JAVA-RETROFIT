@@ -1,7 +1,5 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +14,13 @@ import com.cabinet.cabinetmedical.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
+import com.cabinet.cabinetmedical.model.request.CancelAppointmentRequest;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
+import com.cabinet.cabinetmedical.ui.common.CancelReasonDialog;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +45,6 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
 
     private ApiService apiService;
     private DoctorAppointmentAdapter adapter;
-    private Long doctorId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +62,6 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        // Récupérer doctorId depuis SharedPreferences
-        Session session = SessionManager.get(this).getSession();
-        doctorId = session != null && session.getDoctorId() != null ? session.getDoctorId() : -1L;
-
-        if (doctorId == -1) {
-            finish();
-            return;
-        }
 
         // Initialiser Retrofit
         apiService = ApiClient.getService(this);
@@ -93,7 +81,9 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
 
             @Override
             public void onCancel(AppointmentResponse appointment) {
-                cancelAppointment(appointment.getId());
+                CancelReasonDialog.show(DoctorAppointmentsActivity.this,
+                        appointment.getPatientName() + "\n" + appointment.getFormattedDateTime(),
+                        reason -> cancelAppointment(appointment.getId(), reason));
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -111,7 +101,7 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
         hideError();
         hideEmpty();
 
-        apiService.getDoctorAppointments(doctorId).enqueue(new Callback<List<AppointmentResponse>>() {
+        apiService.getMyAppointments().enqueue(new Callback<List<AppointmentResponse>>() {
             @Override
             public void onResponse(Call<List<AppointmentResponse>> call, Response<List<AppointmentResponse>> response) {
                 showLoading(false);
@@ -125,7 +115,7 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
                         adapter.updateAppointments(appointments);
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -150,7 +140,7 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
                     // Recharger la liste pour voir le changement
                     loadAppointments();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -163,32 +153,24 @@ public class DoctorAppointmentsActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Annuler un rendez-vous
-     */
-    private void cancelAppointment(Long appointmentId) {
-        // TODO: Afficher dialog pour demander raison d'annulation
-        // Créer un body vide (JSON {})
-        Map<String, String> emptyBody = new HashMap<>();
+    /** Annulation par le médecin, avec la raison saisie dans la boîte de dialogue. */
+    private void cancelAppointment(Long appointmentId, String reason) {
+        apiService.cancelAppointment(appointmentId, new CancelAppointmentRequest(reason))
+                .enqueue(new Callback<AppointmentResponse>() {
+                    @Override
+                    public void onResponse(Call<AppointmentResponse> call, Response<AppointmentResponse> response) {
+                        if (response.isSuccessful()) {
+                            loadAppointments();
+                        } else {
+                            showError(ErrorParser.parse(response));
+                        }
+                    }
 
-        apiService.cancelAppointment(appointmentId, "DOCTOR", emptyBody).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    // Recharger la liste
-                    loadAppointments();
-                } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
-                    showError(error);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                String error = ErrorParser.getNetworkErrorMessage(t);
-                showError(error);
-            }
-        });
+                    @Override
+                    public void onFailure(Call<AppointmentResponse> call, Throwable t) {
+                        showError(ErrorParser.getNetworkErrorMessage(t));
+                    }
+                });
     }
 
     private void showLoading(boolean loading) {

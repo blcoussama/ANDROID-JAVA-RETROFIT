@@ -111,7 +111,7 @@ public class AvailableTimeSlotsActivity extends AppCompatActivity {
             // month est 0-indexed (0 = Janvier)
             String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
             selectedDate = date;
-            selectedDateText.setText(String.format("Date sélectionnée : %02d/%02d/%04d", dayOfMonth, month + 1, year));
+            selectedDateText.setText(String.format(Locale.ROOT, "Date sélectionnée : %02d/%02d/%04d", dayOfMonth, month + 1, year));
             loadAvailableTimeSlots();
         });
     }
@@ -137,7 +137,7 @@ public class AvailableTimeSlotsActivity extends AppCompatActivity {
                         adapter.updateTimeSlots(timeSlots);
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

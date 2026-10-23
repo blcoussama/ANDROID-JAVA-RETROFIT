@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Debug uniquement : HTTP en clair autorisé pour joindre l'API locale
      (10.0.2.2 = machine hôte vue depuis l'émulateur, ou IP du PC sur le réseau local). -->
-<network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <!-- Volontaire et limité à la variante debug (jamais incluse dans la release) -->
+    <base-config cleartextTrafficPermitted="true" tools:ignore="InsecureBaseConfiguration">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

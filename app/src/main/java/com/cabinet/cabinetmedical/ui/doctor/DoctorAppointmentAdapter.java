@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cabinet.cabinetmedical.R;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
+import com.cabinet.cabinetmedical.ui.common.StatusColors;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,57 +51,23 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AppointmentResponse appointment = appointments.get(position);
-
-        // Afficher patient
         holder.patientName.setText(appointment.getPatientName());
-        holder.patientPhone.setText(appointment.getPatientPhone());
-
-        // Afficher date/heure
+        holder.patientPhone.setText(appointment.getPatientPhone() != null ? appointment.getPatientPhone() : "");
         holder.dateTime.setText(appointment.getFormattedDateTime());
+        holder.reason.setText(appointment.getReason() != null ? appointment.getReason() : "—");
+        String cancellation = appointment.getCancellationLabel();
+        holder.status.setText(cancellation != null ? cancellation : appointment.getStatusLabel());
+        holder.status.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),
+                StatusColors.forStatus(appointment.getStatus())));
 
-        // Afficher motif
-        holder.reason.setText(appointment.getReason());
-
-        // Afficher status
-        holder.status.setText(appointment.getStatusLabel());
-
-        // Couleur du status
-        int statusColor;
-        switch (appointment.getStatus()) {
-            case "PENDING":
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_pending);
-                break;
-            case "CONFIRMED":
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_confirmed);
-                break;
-            case "CANCELLED":
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_cancelled);
-                break;
-            default:
-                statusColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.status_pending);
-                break;
-        }
-        holder.status.setTextColor(statusColor);
-
-        // Boutons d'action selon le status
-        if (appointment.getStatus().equals("PENDING")) {
-            // RDV en attente → Afficher Confirmer et Annuler
-            holder.confirmButton.setVisibility(View.VISIBLE);
-            holder.cancelButton.setVisibility(View.VISIBLE);
-
-            holder.confirmButton.setOnClickListener(v -> listener.onConfirm(appointment));
-            holder.cancelButton.setOnClickListener(v -> listener.onCancel(appointment));
-        } else if (appointment.getStatus().equals("CONFIRMED")) {
-            // RDV confirmé → Afficher seulement Annuler
-            holder.confirmButton.setVisibility(View.GONE);
-            holder.cancelButton.setVisibility(View.VISIBLE);
-
-            holder.cancelButton.setOnClickListener(v -> listener.onCancel(appointment));
-        } else {
-            // RDV annulé → Cacher tous les boutons
-            holder.confirmButton.setVisibility(View.GONE);
-            holder.cancelButton.setVisibility(View.GONE);
-        }
+        // Actions seulement sur les rendez-vous à venir : l'API refuse (409) le reste
+        Date now = new Date();
+        boolean confirmable = appointment.canBeConfirmed(now);
+        boolean cancellable = appointment.canBeCancelled(now);
+        holder.confirmButton.setVisibility(confirmable ? View.VISIBLE : View.GONE);
+        holder.cancelButton.setVisibility(cancellable ? View.VISIBLE : View.GONE);
+        holder.confirmButton.setOnClickListener(confirmable ? v -> listener.onConfirm(appointment) : null);
+        holder.cancelButton.setOnClickListener(cancellable ? v -> listener.onCancel(appointment) : null);
     }
 
     @Override

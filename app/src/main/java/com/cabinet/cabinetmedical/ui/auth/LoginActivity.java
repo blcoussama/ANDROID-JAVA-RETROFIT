@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Rediriger selon rôle
                     navigateToHome(loginResponse.getRole());
                 } else {
-                    String errorMessage = ErrorParser.parseErrorMessage(response.errorBody());
+                    String errorMessage = ErrorParser.parse(response);
                     showError(errorMessage);
                 }
             }

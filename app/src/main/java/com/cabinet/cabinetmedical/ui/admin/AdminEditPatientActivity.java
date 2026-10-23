@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.admin;
 
+import com.cabinet.cabinetmedical.utils.Validators;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -111,8 +112,8 @@ public class AdminEditPatientActivity extends AppCompatActivity {
             return;
         }
 
-        if (!password.isEmpty() && password.length() < 6) {
-            showError("Le mot de passe doit contenir au moins 6 caractères");
+        if (!password.isEmpty() && !Validators.isValidPassword(password)) {
+            showError(Validators.PASSWORD_RULE);
             return;
         }
 
@@ -157,7 +158,7 @@ public class AdminEditPatientActivity extends AppCompatActivity {
                             "Patient modifié avec succès", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

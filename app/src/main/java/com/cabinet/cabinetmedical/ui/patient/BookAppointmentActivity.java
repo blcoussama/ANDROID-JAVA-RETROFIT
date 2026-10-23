@@ -1,7 +1,5 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -46,7 +44,6 @@ public class BookAppointmentActivity extends AppCompatActivity {
     private TextView errorMessage;
 
     private ApiService apiService;
-    private Long patientId;
     private Long doctorId;
     private String doctorName;
     private String selectedDate;
@@ -64,17 +61,13 @@ public class BookAppointmentActivity extends AppCompatActivity {
         // Bouton retour vers créneaux disponibles
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Récupérer patientId depuis SharedPreferences
-        Session session = SessionManager.get(this).getSession();
-        patientId = session != null && session.getPatientId() != null ? session.getPatientId() : -1L;
-
         // Récupérer les infos depuis l'Intent
         doctorId = getIntent().getLongExtra("doctorId", -1);
         doctorName = getIntent().getStringExtra("doctorName");
         selectedDate = getIntent().getStringExtra("selectedDate");
         selectedTime = getIntent().getStringExtra("selectedTime");
 
-        if (patientId == -1 || doctorId == -1 || selectedDate == null || selectedTime == null) {
+        if (doctorId == -1 || selectedDate == null || selectedTime == null) {
             finish();
             return;
         }
@@ -122,7 +115,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
         CreateAppointmentRequest request = new CreateAppointmentRequest(doctorId, dateTime, reason);
 
-        apiService.createAppointment(patientId, request).enqueue(new Callback<AppointmentResponse>() {
+        apiService.createAppointment(request).enqueue(new Callback<AppointmentResponse>() {
             @Override
             public void onResponse(Call<AppointmentResponse> call, Response<AppointmentResponse> response) {
                 showLoading(false);
@@ -138,7 +131,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

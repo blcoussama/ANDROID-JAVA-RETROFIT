@@ -2,6 +2,7 @@ package com.cabinet.cabinetmedical.utils;
 
 import com.cabinet.cabinetmedical.model.response.ErrorResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -9,114 +10,80 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
- * ErrorParser - Utilitaire pour parser et formater les messages d'erreur
- *
- * RESPONSABILITÉS:
- * - Parser ErrorResponse du backend
- * - Convertir exceptions techniques en messages user-friendly
- * - Éviter d'afficher des détails techniques (IP, ports, etc.)
- *
- * UTILISATION:
- * // Erreur HTTP (response.errorBody())
- * String message = ErrorParser.parseErrorMessage(response.errorBody());
- *
- * // Erreur réseau (onFailure Throwable)
- * String message = ErrorParser.getNetworkErrorMessage(throwable);
+ * Transforme les erreurs de l'API et du réseau en messages lisibles.
+ * Le message rédigé par l'API (format ErrorResponse) est prioritaire ; à défaut, un
+ * message selon le code HTTP.
  */
-public class ErrorParser {
+public final class ErrorParser {
 
-    /**
-     * Parse le message d'erreur depuis la réponse backend
-     *
-     * UTILISÉ POUR:
-     * - Erreurs HTTP (400, 401, 409, 500, etc.)
-     * - Quand response.errorBody() est disponible
-     *
-     * @param errorBody ResponseBody de Retrofit
-     * @return Message d'erreur du backend (ou message par défaut)
-     */
-    public static String parseErrorMessage(ResponseBody errorBody) {
-        try {
-            if (errorBody != null) {
-                String errorJson = errorBody.string();
-                Gson gson = new Gson();
-                ErrorResponse error = gson.fromJson(errorJson, ErrorResponse.class);
+    private static final Gson GSON = new Gson();
 
-                if (error != null) {
-                    // Si erreurs de validation existent, les afficher
-                    if (error.getErrors() != null && !error.getErrors().isEmpty()) {
-                        // Joindre toutes les erreurs avec des sauts de ligne
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < error.getErrors().size(); i++) {
-                            sb.append(error.getErrors().get(i));
-                            if (i < error.getErrors().size() - 1) {
-                                sb.append("\n");
-                            }
-                        }
-                        return sb.toString();
-                    }
+    private ErrorParser() {
+    }
 
-                    // Sinon, retourner le message général
-                    if (error.getMessage() != null) {
-                        return error.getMessage();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // Si parsing échoue, retourner message générique
-        }
-
-        return "Erreur serveur";
+    /** Message d'erreur d'une réponse HTTP non réussie. */
+    public static String parse(Response<?> response) {
+        String fromBody = parseErrorMessage(response.errorBody());
+        return fromBody != null ? fromBody : messageForStatus(response.code());
     }
 
     /**
-     * Convertir une exception réseau en message user-friendly
-     *
-     * UTILISÉ POUR:
-     * - onFailure(Call, Throwable) de Retrofit
-     * - Erreurs réseau (backend offline, timeout, pas d'internet)
-     *
-     * EXEMPLES:
-     * ConnectException → "Impossible de se connecter au serveur"
-     * SocketTimeoutException → "La connexion a expiré"
-     * UnknownHostException → "Vérifiez votre connexion Internet"
-     *
-     * ÉVITE D'AFFICHER:
-     * ❌ "Failed to connect to /172.25.135.62:8080"
-     * ❌ "Unable to resolve host"
-     * ✅ Messages simples et compréhensibles
-     *
-     * @param throwable Exception capturée par onFailure
-     * @return Message d'erreur user-friendly
+     * Message de l'API contenu dans le corps d'erreur : détail des erreurs de validation
+     * (une par ligne) ou message général. Null si le corps est absent ou illisible.
      */
+    public static String parseErrorMessage(ResponseBody errorBody) {
+        if (errorBody == null) {
+            return null;
+        }
+        try {
+            ErrorResponse error = GSON.fromJson(errorBody.string(), ErrorResponse.class);
+            if (error == null) {
+                return null;
+            }
+            if (error.getErrors() != null && !error.getErrors().isEmpty()) {
+                return String.join("\n", error.getErrors());
+            }
+            return error.getMessage();
+        } catch (IOException | JsonParseException | IllegalStateException e) {
+            return null;
+        }
+    }
+
+    static String messageForStatus(int code) {
+        switch (code) {
+            case 400:
+                return "Requête invalide.";
+            case 401:
+                return "Session expirée, reconnectez-vous.";
+            case 403:
+                return "Accès refusé.";
+            case 404:
+                return "Élément introuvable.";
+            case 409:
+                return "Action impossible dans l'état actuel (déjà fait ou déjà réservé).";
+            case 429:
+                return "Trop de tentatives. Réessayez dans quelques minutes.";
+            default:
+                return code >= 500 ? "Erreur du serveur, réessayez plus tard." : "Erreur inattendue (" + code + ").";
+        }
+    }
+
     public static String getNetworkErrorMessage(Throwable throwable) {
-        if (throwable == null) {
-            return "Erreur inconnue";
-        }
-
-        // Erreur de connexion (serveur offline, IP inaccessible)
         if (throwable instanceof ConnectException) {
-            return "Impossible de se connecter au serveur. Vérifiez que le serveur est démarré.";
+            return "Impossible de joindre le serveur. Vérifiez qu'il est démarré.";
         }
-
-        // Timeout (serveur trop lent ou ne répond pas)
         if (throwable instanceof SocketTimeoutException) {
             return "La connexion a expiré. Réessayez.";
         }
-
-        // Pas d'accès réseau ou DNS ne résout pas
         if (throwable instanceof UnknownHostException) {
             return "Vérifiez votre connexion Internet.";
         }
-
-        // IOException générique (problème réseau)
         if (throwable instanceof IOException) {
             return "Erreur de connexion. Vérifiez votre réseau.";
         }
-
-        // Autres erreurs (parsing JSON, etc.)
         return "Une erreur inattendue s'est produite. Réessayez.";
     }
 }

@@ -99,7 +99,7 @@ public class DoctorListActivity extends AppCompatActivity {
                         adapter.updateDoctors(doctors);
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

@@ -1,5 +1,6 @@
 package com.cabinet.cabinetmedical.ui.doctor;
 
+import java.util.Locale;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -156,8 +157,8 @@ public class DoctorEditTimeSlotActivity extends AppCompatActivity {
 
         TimePickerDialog picker = new TimePickerDialog(this,
                 (view, hourOfDay, min) -> {
-                    selectedStartTime = String.format("%02d:%02d:00", hourOfDay, min);
-                    startTimeInput.setText(String.format("%02d:%02d", hourOfDay, min));
+                    selectedStartTime = String.format(Locale.ROOT, "%02d:%02d:00", hourOfDay, min);
+                    startTimeInput.setText(String.format(Locale.ROOT, "%02d:%02d", hourOfDay, min));
                     validateTimes();
                 }, hour, minute, true);
         picker.show();
@@ -177,8 +178,8 @@ public class DoctorEditTimeSlotActivity extends AppCompatActivity {
 
         TimePickerDialog picker = new TimePickerDialog(this,
                 (view, hourOfDay, min) -> {
-                    selectedEndTime = String.format("%02d:%02d:00", hourOfDay, min);
-                    endTimeInput.setText(String.format("%02d:%02d", hourOfDay, min));
+                    selectedEndTime = String.format(Locale.ROOT, "%02d:%02d:00", hourOfDay, min);
+                    endTimeInput.setText(String.format(Locale.ROOT, "%02d:%02d", hourOfDay, min));
                     validateTimes();
                 }, hour, minute, true);
         picker.show();
@@ -254,7 +255,7 @@ public class DoctorEditTimeSlotActivity extends AppCompatActivity {
                     // Erreur de chevauchement
                     showError("Ce créneau chevauche un créneau existant");
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }
@@ -296,7 +297,7 @@ public class DoctorEditTimeSlotActivity extends AppCompatActivity {
                             "Créneau supprimé avec succès", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
+                    String error = ErrorParser.parse(response);
                     showError(error);
                 }
             }

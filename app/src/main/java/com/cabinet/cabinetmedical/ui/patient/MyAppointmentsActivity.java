@@ -1,24 +1,26 @@
 package com.cabinet.cabinetmedical.ui.patient;
 
-import com.cabinet.cabinetmedical.session.SessionManager;
-import com.cabinet.cabinetmedical.session.Session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cabinet.cabinetmedical.R;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.cabinet.cabinetmedical.api.ApiClient;
 import com.cabinet.cabinetmedical.api.ApiService;
+import com.cabinet.cabinetmedical.model.request.CancelAppointmentRequest;
 import com.cabinet.cabinetmedical.model.response.AppointmentResponse;
+import com.cabinet.cabinetmedical.ui.common.CancelReasonDialog;
 import com.cabinet.cabinetmedical.utils.ErrorParser;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * MyAppointmentsActivity - Liste de tous les rendez-vous du patient
- *
- * RÔLE:
- * Affiche l'historique complet des RDV du patient (futurs, passés, annulés).
- * Accessible depuis HomePatientActivity (bouton "Mes rendez-vous").
- *
- * API: GET /api/appointments/patient/{patientId}
- * AFFICHAGE: RecyclerView avec AppointmentAdapter
- */
+/** Rendez-vous du patient connecté (GET /api/appointments/me), annulation des rendez-vous à venir. */
 public class MyAppointmentsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -46,87 +39,84 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
     private ApiService apiService;
     private AppointmentAdapter adapter;
-    private Long patientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
 
-        // Configurer la Toolbar
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> backToHome());
 
-        // Bouton retour vers Home
-        toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(this, HomePatientActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        });
-
-        // Récupérer patientId depuis SharedPreferences
-        Session session = SessionManager.get(this).getSession();
-        patientId = session != null && session.getPatientId() != null ? session.getPatientId() : -1L;
-
-        if (patientId == -1) {
-            // Pas de patient_id → Retour
-            finish();
-            return;
-        }
-
-        // Initialiser Retrofit
         apiService = ApiClient.getService(this);
-
-        // Initialiser les vues
         recyclerView = findViewById(R.id.recycler_view);
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.error_message);
         emptyMessage = findViewById(R.id.empty_message);
 
-        // Setup RecyclerView
-        adapter = new AppointmentAdapter(new ArrayList<>());
+        adapter = new AppointmentAdapter(new ArrayList<>(), this::askCancellation);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Charger les rendez-vous
         loadAppointments();
     }
 
-    /**
-     * Charger les rendez-vous du patient
-     */
     private void loadAppointments() {
         showLoading(true);
-        hideError();
-        hideEmpty();
+        errorMessage.setVisibility(View.GONE);
+        emptyMessage.setVisibility(View.GONE);
 
-        apiService.getPatientAppointments(patientId).enqueue(new Callback<List<AppointmentResponse>>() {
+        apiService.getMyAppointments().enqueue(new Callback<List<AppointmentResponse>>() {
             @Override
-            public void onResponse(Call<List<AppointmentResponse>> call, Response<List<AppointmentResponse>> response) {
+            public void onResponse(@NonNull Call<List<AppointmentResponse>> call,
+                    @NonNull Response<List<AppointmentResponse>> response) {
                 showLoading(false);
-
                 if (response.isSuccessful() && response.body() != null) {
-                    List<AppointmentResponse> appointments = response.body();
-
-                    if (appointments.isEmpty()) {
-                        showEmpty();
+                    if (response.body().isEmpty()) {
+                        emptyMessage.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                     } else {
-                        adapter.updateAppointments(appointments);
+                        adapter.updateAppointments(response.body());
                     }
                 } else {
-                    String error = ErrorParser.parseErrorMessage(response.errorBody());
-                    showError(error);
+                    showError(ErrorParser.parse(response));
                 }
             }
 
             @Override
-            public void onFailure(Call<List<AppointmentResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<AppointmentResponse>> call, @NonNull Throwable t) {
                 showLoading(false);
-                String error = ErrorParser.getNetworkErrorMessage(t);
-                showError(error);
+                showError(ErrorParser.getNetworkErrorMessage(t));
             }
         });
+    }
+
+    private void askCancellation(AppointmentResponse appointment) {
+        CancelReasonDialog.show(this, appointment.getDoctorName() + "\n" + appointment.getFormattedDateTime(),
+                reason -> cancel(appointment.getId(), reason));
+    }
+
+    private void cancel(Long appointmentId, String reason) {
+        apiService.cancelAppointment(appointmentId, new CancelAppointmentRequest(reason))
+                .enqueue(new Callback<AppointmentResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AppointmentResponse> call,
+                            @NonNull Response<AppointmentResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(MyAppointmentsActivity.this, "Rendez-vous annulé",
+                                    Toast.LENGTH_SHORT).show();
+                            loadAppointments();
+                        } else {
+                            showError(ErrorParser.parse(response));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AppointmentResponse> call, @NonNull Throwable t) {
+                        showError(ErrorParser.getNetworkErrorMessage(t));
+                    }
+                });
     }
 
     private void showLoading(boolean loading) {
@@ -137,29 +127,18 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     private void showError(String message) {
         errorMessage.setText(message);
         errorMessage.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
     }
 
-    private void hideError() {
-        errorMessage.setVisibility(View.GONE);
-    }
-
-    private void showEmpty() {
-        emptyMessage.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-    }
-
-    private void hideEmpty() {
-        emptyMessage.setVisibility(View.GONE);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        // Retour vers Home Patient
+    private void backToHome() {
         Intent intent = new Intent(this, HomePatientActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        backToHome();
         return true;
     }
 }
