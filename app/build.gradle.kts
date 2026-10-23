@@ -82,3 +82,10 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
+
+// Verrouillage des dépendances embarquées dans l'APK (app/gradle.lockfile) : builds reproductibles
+// et audit des vulnérabilités par osv-scanner en CI. Mise à jour : ./gradlew :app:dependencies
+// --configuration releaseRuntimeClasspath --write-locks
+configurations.matching { it.name == "releaseRuntimeClasspath" }.configureEach {
+    resolutionStrategy.activateDependencyLocking()
+}
