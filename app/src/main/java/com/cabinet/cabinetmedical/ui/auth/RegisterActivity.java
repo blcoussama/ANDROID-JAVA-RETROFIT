@@ -108,7 +108,8 @@ public class RegisterActivity extends AppCompatActivity {
         hideError();
 
         // Créer requête
-        RegisterRequest request = new RegisterRequest(email, password, firstName, lastName, phone);
+        RegisterRequest request = new RegisterRequest(email, password, firstName, lastName,
+                phone.isEmpty() ? null : phone);
 
         // Appel API
         apiService.register(request).enqueue(new Callback<LoginResponse>() {
